@@ -1,5 +1,8 @@
 {
   "name": "mapApp",
-  "integrations": {},
+  "integrations": {
+    "cordova": {},
+    "capacitor": {}
+  },
   "type": "angular"
 }

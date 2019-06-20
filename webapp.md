@@ -5,4 +5,4 @@
 From root folder (./mapApp) run
 
 ```bash
-$ ionic serve
+$ ionic serve --lab
