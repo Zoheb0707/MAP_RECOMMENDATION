@@ -14,8 +14,6 @@ export class LoginPage implements OnInit {
   }
 
   async navTabs() {
-    //you can use either of below
     this.router.navigateByUrl('/app/tabs/search');
-    //this.navCtrl.navigateRoot('/app/tabs/(home:home)')
   }
 }
