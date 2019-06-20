@@ -9,6 +9,9 @@ export class Tab2Page {
   text = '';
 
   onChangeAlert() {
+    if (this.text === '') {
+      this.text = 'random';
+    }
     alert('Sending request with key: ' + this.text);
     this.text = '';
   }
