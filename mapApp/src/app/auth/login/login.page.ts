@@ -13,7 +13,11 @@ export class LoginPage implements OnInit {
   ngOnInit() {
   }
 
-  async navTabs() {
-    this.router.navigateByUrl('/app/tabs/search');
+  navTabs(form) {
+    if (form.value.email === 'root' && form.value.password === 'root') {
+      this.router.navigateByUrl('/app/tabs/search');
+    } else {
+      alert('Wrong Credentials!');
+    }
   }
 }

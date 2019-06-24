@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-tab2',
@@ -6,13 +7,17 @@ import { Component } from '@angular/core';
   styleUrls: ['tab2.page.scss']
 })
 export class Tab2Page {
+
+  constructor(private  router: Router) {}
+
   text = '';
 
   onChangeAlert() {
     if (this.text === '') {
       this.text = 'random';
     }
-    alert('Sending request with key: ' + this.text);
+    // alert('Sending request with key: ' + this.text);
     this.text = '';
+    this.router.navigateByUrl('searches');
   }
 }

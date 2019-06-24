@@ -11,6 +11,6 @@ export class Tab3Page {
   constructor(private  router: Router) {}
 
   async onChangeExit() {
-    this.router.navigateByUrl('');
+    this.router.navigateByUrl('login');
   }
 }
