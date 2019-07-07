@@ -101,7 +101,7 @@
             $statement = $db->prepare($query);
             $params = array("restaurant" => $restaurant, "user" => $user);
             $statement->execute($params);
-            $result = $statement->fetchALL(PDO::FETCH_ASSOC);
+            $result = $statement->fetch(PDO::FETCH_ASSOC);
             header("Content-type: application/json");
             print(json_encode($result));
         } catch (PDOException $ex) {

@@ -46,4 +46,19 @@
         return $name_in_table;
     }
 
+    function get_user($mode) {
+        try {
+            $db = get_PDO();
+            $query = "SELECT * FROM users WHERE user_id = :id;";
+            $statement = $db->prepare($query);
+            $params = array("id" => $mode);
+            $statement->execute($params);
+            $output = $statement->fetch(PDO::FETCH_ASSOC);
+            return($output);
+        }
+        catch (PDOException $ex) {
+            handleDatabaseError();
+        }
+    }
+
 ?>
