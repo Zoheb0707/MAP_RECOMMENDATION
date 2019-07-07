@@ -7,14 +7,22 @@ import { Storage } from '@ionic/storage';
   templateUrl: 'tab3.page.html',
   styleUrls: ['tab3.page.scss']
 })
+
 export class Tab3Page {
 
   name: string;
 
   constructor(private  router: Router, private storage: Storage) {
+  }
+
+  ionViewWillEnter() {
     this.storage.get('first_name').then((val: string) => {
       this.name = val;
     });
+  }
+  
+  ionViewDidLeave() {
+    this.name = '';
   }
 
   async onChangeExit() {

@@ -15,7 +15,7 @@ import { map } from 'rxjs/operators';
 @Injectable()
 export class LoginPage {
 
-  constructor(private  router: Router, private http: HttpClient, private alertCtrl: AlertController, private storage: Storage) {
+  constructor(private router: Router, private http: HttpClient, private alertCtrl: AlertController, private storage: Storage) {
     this.storage.get('id').then((val) => {
       if (val != null) {
         this.router.navigateByUrl('/app/tabs/search');
@@ -26,82 +26,34 @@ export class LoginPage {
   navTabs(form) {
     let mode = '';
     if (form.value.email != null && form.value.password != null) {
-      mode = form.value.email;
+      mode = 'one&user=' + form.value.email;
     } else {
       mode = 'all';
     }
 
     this.getData(mode)
-    .then(data => {
-      if (data[0].password === form.value.password) {
-        this.storage.set('id', data[0].user_id);
-        this.storage.set('first_name', data[0].first_name);
-        this.storage.set('last_name', data[0].last_name);
-        this.router.navigateByUrl('/app/tabs/search');
-      } else {
-        alert("Wrong Password!");
-      }
-    });
+      .then(data => {
+        if (data["password"] === form.value.password) {
+          this.storage.set('id', data["user_id"]);
+          this.storage.set('first_name', data["first_name"]);
+          this.storage.set('last_name', data["last_name"]);
+          this.router.navigateByUrl('/app/tabs/search');
+        } else {
+          alert("Wrong Password!");
+        }
+      });
   }
 
   getData(mode: string) {
-      const url = 'http://localhost:80/get_users.php?mode=' + mode;
+    const url = 'http://localhost:80/get_users.php?mode=' + mode;
 
-      // this.http.get(url).subscribe((data: Response) => {
-      //   // console.log(data);
-      //   toReturn = data;
-      // }, error => {
-      //   console.log(error);
-      // });
-      // // console.log(toReturn);
-      // return toReturn;
-
-      return new Promise(resolve => {
-        this.http.get(url)
-          .subscribe((data: any) => {
-            resolve(data);
-          }, error => {
-            // resolve(error);
-          });
-      });
-
-      // return new Promise(resolve => {
-      //   this.http.get(url)
-      //     .subscribe((data: any) => {
-      //       resolve(data.map(res => {
-      //         return new User(
-      //           res.last_name,
-      //           res.first_name,
-      //           res.user_id,
-      //           res.password
-      //         );
-      //       }));
-      //     }, error => {
-      //       resolve(error);
-      //     });
-      // });
-
-//       return this.http.get(url).pipe(map(res => {
-// // tslint:disable-next-line: no-use-before-declare
-//           return new User(
-//             res.first_name,
-//             res.last_name,
-//             res.user_id,
-//             res.password
-//             );
-//         }));
+    return new Promise(resolve => {
+      this.http.get(url)
+        .subscribe((data: any) => {
+          resolve(data);
+        }, error => {
+          // resolve(error);
+        });
+    });
   }
 }
-
-// export class User {
-//   firstName = '';
-//   lastName = '';
-//   id = '';
-//   password = '';
-//     constructor(firstName, lastName, id, password) {
-//         this.firstName = firstName;
-//         this.lastName = lastName;
-//         this.id = id;
-//         this.password = password;
-//     }
-// }
