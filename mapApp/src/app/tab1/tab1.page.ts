@@ -18,10 +18,10 @@ export class Tab1Page {
   constructor(private  router: Router, private http: HttpClient, private visitsService: VisitsService, private storage: Storage) {}
 
   ionViewWillEnter() {
-    this.storage.get('id').then((val: string) => {
+    this.storage.get('ID').then((val: string) => {
       this.results = this.visitsService.searchData(val);
     });
-  } 
+  }
 
   back() {
     this.router.navigateByUrl('/app/tabs/search');
