@@ -8,7 +8,7 @@ const routes: Routes = [
     component: TabsPage,
     children: [
       {
-        path: 'tab1',
+        path: 'history',
         children: [
           {
             path: '',
@@ -26,7 +26,7 @@ const routes: Routes = [
         ]
       },
       {
-        path: 'tab3',
+        path: 'profile',
         children: [
           {
             path: '',
