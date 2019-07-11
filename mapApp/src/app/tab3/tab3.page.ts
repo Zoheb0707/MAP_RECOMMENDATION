@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { Storage } from '@ionic/storage';
 
+import { AuthService } from '../auth/auth.service';
+
 @Component({
   selector: 'app-tab3',
   templateUrl: 'tab3.page.html',
@@ -12,23 +14,21 @@ export class Tab3Page {
 
   name: string;
 
-  constructor(private  router: Router, private storage: Storage) {
+  constructor(private  authService: AuthService,private  router: Router, private storage: Storage) {
   }
 
   ionViewWillEnter() {
-    this.storage.get('first_name').then((val: string) => {
+    this.storage.get('FIRST_NAME').then((val: string) => {
       this.name = val;
     });
   }
-  
+
   ionViewDidLeave() {
     this.name = '';
   }
 
   async onChangeExit() {
-    this.storage.set('id', null);
-    this.storage.set('first_name', null);
-    this.storage.set('last_name', null);
+    await this.authService.logout();
     this.router.navigateByUrl('login');
   }
 }
