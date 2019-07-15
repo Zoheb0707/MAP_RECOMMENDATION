@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { Storage } from '@ionic/storage';
+import { NavController } from '@ionic/angular';
 
 import { AuthService } from '../auth/auth.service';
 
@@ -14,7 +15,7 @@ export class Tab3Page {
 
   name: string;
 
-  constructor(private  authService: AuthService,private  router: Router, private storage: Storage) {
+  constructor(private  authService: AuthService,private  router: Router, private storage: Storage, private navCtrl: NavController) {
   }
 
   ionViewWillEnter() {
@@ -29,6 +30,6 @@ export class Tab3Page {
 
   async onChangeExit() {
     await this.authService.logout();
-    this.router.navigateByUrl('login');
+    this.navCtrl.navigateBack('login');
   }
 }

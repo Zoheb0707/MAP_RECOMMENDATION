@@ -1,5 +1,8 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { NavController } from '@ionic/angular';
+
+import { AuthService } from '../auth/auth.service';
 
 @Component({
   selector: 'app-tab2',
@@ -8,7 +11,7 @@ import { Router } from '@angular/router';
 })
 export class Tab2Page {
 
-  constructor(private  router: Router) {}
+  constructor(private  router: Router, private navCtrl: NavController) {}
 
   text = '';
 
@@ -18,6 +21,6 @@ export class Tab2Page {
     }
     // alert('Sending request with key: ' + this.text);
     this.text = '';
-    this.router.navigateByUrl('searches');
+    this.navCtrl.navigateForward('searches');
   }
 }
