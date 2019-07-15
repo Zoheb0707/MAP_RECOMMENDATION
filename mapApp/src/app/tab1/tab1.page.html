@@ -10,14 +10,17 @@
  
   <ion-list>
  
-    <ion-item card *ngFor="let item of (results | async)">
+    <ion-card *ngFor="let item of (results | async)">
  
-      <ion-label text-wrap>
-        <h3>{{ item.restaurant_id }}</h3>
-        {{ item.times }}
-      </ion-label>
+      <ion-card-header>
+        <ion-card-title>{{ item.restaurant_id }}</ion-card-title>
+      </ion-card-header>
+
+      <ion-card-content>
+        You visited this place {{ item.times }} times.
+      </ion-card-content>
  
-    </ion-item>
+    </ion-card>
  
   </ion-list>
  
