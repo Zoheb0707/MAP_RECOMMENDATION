@@ -7,11 +7,15 @@
 </ion-header>
 
 <ion-content>
- 
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content
+      pulling-text="Refreshing..."
+      on-refresh="populateList()">
+    </ion-refresher-content>
+  </ion-refresher>
+
   <ion-list>
- 
-    <ion-card *ngFor="let item of (results | async)">
- 
+    <ion-card *ngFor="let item of results | async">
       <ion-card-header>
         <ion-card-title>{{ item.restaurant_id }}</ion-card-title>
       </ion-card-header>
@@ -19,9 +23,6 @@
       <ion-card-content>
         You visited this place {{ item.times }} times.
       </ion-card-content>
- 
     </ion-card>
- 
   </ion-list>
- 
 </ion-content>
