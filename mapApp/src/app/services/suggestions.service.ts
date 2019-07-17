@@ -8,7 +8,7 @@ import { map } from 'rxjs/operators';
 })
 export class SuggestionsService {
 
-  url = 'http://localhost/get_restaurants.php?mode=all';
+  url = 'http://192.168.0.13/get_restaurants.php?mode=all';
 
   constructor(private http: HttpClient) { }
 

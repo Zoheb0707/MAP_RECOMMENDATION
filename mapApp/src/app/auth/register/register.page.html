@@ -1,5 +1,5 @@
 <ion-content  color="primary">
-    <form  #form="ngForm" (ngSubmit)="register(form)">
+    <form #form="ngForm" [formGroup]="registerForm" (ngSubmit)="register(form)">
       <ion-grid>
         <ion-row color="primary" justify-content-center>
           <ion-col align-self-center size-md="6" size-lg="5" size-xs="12">
@@ -7,22 +7,58 @@
               <h3>Create your account!</h3>
             </div>
             <div padding>
+
               <ion-item>
-                <ion-input  name="first_name" type="text" placeholder="First Name" ngModel required></ion-input>
-                <ion-input  name="last_name" type="text" placeholder="Last Name" ngModel required></ion-input>
+                <ion-label position="floating">First Name</ion-label>
+                <ion-input formControlName="first_name" type="text" [class.invalid]="!registerForm.controls.first_name.valid"></ion-input>
               </ion-item>
-              <ion-item>
-                <ion-input name="user_id" type="email" placeholder="your@email.com" ngModel required></ion-input>
+
+              <ion-item *ngIf="registerForm.get('first_name').hasError('pattern')">
+                <p>Please enter a valid first name.</p>
               </ion-item>
+
               <ion-item>
-                <ion-input name="password" type="password" placeholder="Password" ngModel required></ion-input>
+                <ion-label position="floating">Last Name</ion-label>
+                <ion-input formControlName="last_name" type="text" [class.invalid]="!registerForm.controls.last_name.valid"></ion-input>
               </ion-item>
+
+              <ion-item *ngIf="registerForm.get('last_name').hasError('pattern')">
+                <p>Please enter a valid last name.</p>
+              </ion-item>
+
               <ion-item>
-                <ion-input name="confirm" type="password" placeholder="Password again" ngModel required></ion-input>
+                <ion-label position="floating">E-mail</ion-label>
+                <ion-input formControlName="user_id" type="email" [class.invalid]="!registerForm.controls.user_id.valid"></ion-input>
+              </ion-item>
+
+              <ion-item *ngIf="registerForm.get('user_id').hasError('email')">
+                <p>Please enter a valid e-mail.</p>
+              </ion-item>
+
+              <ion-item>
+                <ion-label position="floating">Password</ion-label>
+                <ion-input formControlName="password" type="password" [class.invalid]="!registerForm.controls.password.valid"></ion-input>
+              </ion-item>
+
+              <ion-item *ngIf="registerForm.get('password').hasError('pattern')">
+                <p> Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters.</p>
+              </ion-item>
+
+              <ion-item>
+                <ion-label position="floating">Password again</ion-label>
+                <ion-input formControlName="confirm" type="password" [class.invalid]="!registerForm.controls.confirm.valid"></ion-input>
+              </ion-item>
+
+              <ion-item *ngIf="registerForm.get('confirm').hasError('equalTo')">
+                  <p>Password Mismatch.</p>
               </ion-item>
             </div>
             <div padding>
               <ion-button  size="large" type="submit" [disabled]="form.invalid" expand="block">Register</ion-button>
+            </div>
+
+            <div padding>
+              <ion-button  size="large" type="button" expand="block" color="danger">Back</ion-button>
             </div>
           </ion-col>
         </ion-row>

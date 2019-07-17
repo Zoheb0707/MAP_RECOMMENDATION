@@ -12,17 +12,37 @@ import { AuthResponse } from './auth-response';
 })
 export class AuthService {
 
-  AUTH_SERVER_ADDRESS = 'http://localhost:80';
+  AUTH_SERVER_ADDRESS = 'http://192.168.0.13:80';
   authSubject = new BehaviorSubject(false);
 
   constructor(private  httpClient: HttpClient, private  storage: Storage) { }
 
   register(user: User): Observable<AuthResponse> {
-    return this.httpClient.post<AuthResponse>(`${this.AUTH_SERVER_ADDRESS}/update_users.php`, user).pipe(
+
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/x-www-form-urlencoded'
+      })
+    };
+
+    const params = new HttpParams({
+      fromObject: {
+        mode: 'new',
+        user_id: user.user_id,
+        password: user.password,
+        first_name: user.first_name,
+        last_name: user.last_name
+      }
+    });
+
+    return this.httpClient.post<AuthResponse>(`${this.AUTH_SERVER_ADDRESS}/update_users.php`, params, httpOptions).pipe(
       tap(async (res: AuthResponse ) => {
 
         if (res.user) {
           await this.storage.set('EXPIRES_IN', res.user.expires_in);
+          await this.storage.set('ID', res.user.user_id);
+          await this.storage.set('FIRST_NAME', res.user.first_name);
+          await this.storage.set('LAST_NAME', res.user.first_name);
           this.authSubject.next(true);
         }
       })
