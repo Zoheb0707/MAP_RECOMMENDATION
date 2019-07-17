@@ -70,4 +70,8 @@ export class RegisterPage implements OnInit {
     }
   }
 
+  back() {
+    this.navCtrl.navigateBack('login');
+  }
+
 }

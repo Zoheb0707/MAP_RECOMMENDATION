@@ -8,7 +8,7 @@ import { map } from 'rxjs/operators';
 })
 export class VisitsService {
 
-  url = 'http://localhost/get_visits.php';
+  url = 'http://192.168.0.13/get_visits.php';
 
   constructor(private http: HttpClient) { }
 
