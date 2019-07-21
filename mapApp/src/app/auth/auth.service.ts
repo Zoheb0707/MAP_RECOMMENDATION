@@ -42,7 +42,7 @@ export class AuthService {
           await this.storage.set('EXPIRES_IN', res.user.expires_in);
           await this.storage.set('ID', res.user.user_id);
           await this.storage.set('FIRST_NAME', res.user.first_name);
-          await this.storage.set('LAST_NAME', res.user.first_name);
+          await this.storage.set('LAST_NAME', res.user.last_name);
           this.authSubject.next(true);
         }
       })
@@ -72,7 +72,7 @@ export class AuthService {
           await this.storage.set('EXPIRES_IN', res.user.expires_in);
           await this.storage.set('ID', res.user.user_id);
           await this.storage.set('FIRST_NAME', res.user.first_name);
-          await this.storage.set('LAST_NAME', res.user.first_name);
+          await this.storage.set('LAST_NAME', res.user.last_name);
           this.authSubject.next(true);
         }
       })
