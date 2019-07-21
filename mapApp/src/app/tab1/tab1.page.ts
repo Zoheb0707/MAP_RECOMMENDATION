@@ -13,26 +13,39 @@ import { VisitsService } from '../services/visits.service';
 })
 export class Tab1Page implements OnInit {
 
-  results: Observable<any>;
+  /**
+   * Stores a list of previously visited restaurants
+   */
+  pastVisits: Observable<any>;
 
   constructor(private router: Router, private http: HttpClient, private visitsService: VisitsService, private storage: Storage) { }
 
   ngOnInit() {
-    this.updateList();
+    this.reloadVisits();
   }
 
+  /**
+   * Switches current tab to the search tab
+   */
   back() {
     this.router.navigateByUrl('/app/tabs/search');
   }
 
-
-  doRefresh(event) {
-    this.updateList(event);
+  /**
+   * Performs refresh of past visits
+   * @param event IonRefresh event
+   */
+  refreshVisits(event) {
+    this.reloadVisits(event);
   }
 
-  async updateList(event?) {
+  /**
+   * Reloads list of past visits
+   * @param [event] IonRefresh event
+   */
+  async reloadVisits(event?) {
     this.storage.get('ID').then((val: string) => {
-      this.results = this.visitsService.searchData(val);
+      this.pastVisits = this.visitsService.searchData(val);
       if (event !== undefined) {
         event.target.complete();
       }
