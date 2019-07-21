@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { Storage } from '@ionic/storage';
 import { Observable } from 'rxjs';
 import { VisitsService } from '../services/visits.service';
+import { Loading, LoadingController } from '@ionic/angular';
 
 
 @Component({
@@ -18,7 +19,8 @@ export class Tab1Page implements OnInit {
    */
   pastVisits: Observable<any>;
 
-  constructor(private router: Router, private http: HttpClient, private visitsService: VisitsService, private storage: Storage) { }
+  constructor(private router: Router, private http: HttpClient, private visitsService: VisitsService, private storage: Storage, 
+              private loadingController: LoadingController) { }
 
   ngOnInit() {
     this.reloadVisits();
@@ -44,12 +46,20 @@ export class Tab1Page implements OnInit {
    * @param [event] IonRefresh event
    */
   async reloadVisits(event?) {
+    if (event === undefined) {
+      const loading = await this.loadingController.create({
+        message: 'Loading your visits',
+        duration: 10000
+      });
+      await loading.present();
+    }
     this.storage.get('ID').then((val: string) => {
       this.pastVisits = this.visitsService.searchData(val);
       if (event !== undefined) {
         event.target.complete();
+      } else {
+        this.loadingController.dismiss();
       }
     });
   }
-
 }
