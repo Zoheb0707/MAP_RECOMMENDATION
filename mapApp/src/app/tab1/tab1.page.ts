@@ -4,7 +4,8 @@ import { HttpClient } from '@angular/common/http';
 import { Storage } from '@ionic/storage';
 import { Observable } from 'rxjs';
 import { VisitsService } from '../services/visits.service';
-import { Loading, LoadingController } from '@ionic/angular';
+import { LoadingController } from '@ionic/angular';
+import { Restaurant } from './restaurant';
 
 
 @Component({
@@ -17,7 +18,7 @@ export class Tab1Page implements OnInit {
   /**
    * Stores a list of previously visited restaurants
    */
-  pastVisits: Observable<any>;
+  pastVisits: Restaurant[];
 
   constructor(private router: Router, private http: HttpClient, private visitsService: VisitsService, private storage: Storage, 
               private loadingController: LoadingController) { }
@@ -54,12 +55,29 @@ export class Tab1Page implements OnInit {
       await loading.present();
     }
     this.storage.get('ID').then((val: string) => {
-      this.pastVisits = this.visitsService.searchData(val);
-      if (event !== undefined) {
-        event.target.complete();
-      } else {
-        this.loadingController.dismiss();
-      }
+      this.visitsService.searchData(val).subscribe(
+        // If result is loaded
+        (answ) => {
+          // Subscribe new list of restaurants
+          this.pastVisits = answ;
+          // If refresh
+          if (event !== undefined) {
+            event.target.complete();
+          } else {
+            this.loadingController.dismiss();
+          }
+        },
+        // If there was an error connecting to the server
+        (err) => {
+          if (event !== undefined) {
+            event.target.complete();
+          } else {
+            this.loadingController.dismiss();
+          }
+          this.pastVisits = undefined;
+          console.log('Error with server!');
+        }
+      );
     });
   }
 }

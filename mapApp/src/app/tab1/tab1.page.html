@@ -14,7 +14,7 @@
   </ion-refresher>
 
   <ion-list>
-    <ion-card *ngFor="let restaurant of pastVisits | async">
+    <ion-card *ngFor="let restaurant of pastVisits">
       <ion-card-header>
         <ion-card-title>{{ restaurant.restaurant_id }}</ion-card-title>
       </ion-card-header>
