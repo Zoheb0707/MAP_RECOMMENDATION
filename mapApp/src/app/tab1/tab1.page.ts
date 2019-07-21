@@ -2,10 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { Storage } from '@ionic/storage';
-import { Observable } from 'rxjs';
 import { VisitsService } from '../services/visits.service';
 import { LoadingController } from '@ionic/angular';
 import { Restaurant } from './restaurant';
+import { AlertController } from '@ionic/angular';
 
 
 @Component({
@@ -19,9 +19,10 @@ export class Tab1Page implements OnInit {
    * Stores a list of previously visited restaurants
    */
   pastVisits: Restaurant[];
+  debug = false;
 
   constructor(private router: Router, private http: HttpClient, private visitsService: VisitsService, private storage: Storage, 
-              private loadingController: LoadingController) { }
+              private loadingController: LoadingController, private alertController: AlertController) { }
 
   ngOnInit() {
     this.reloadVisits();
@@ -75,9 +76,27 @@ export class Tab1Page implements OnInit {
             this.loadingController.dismiss();
           }
           this.pastVisits = undefined;
-          console.log('Error with server!');
+          this.presentServerError();
         }
       );
     });
+  }
+
+  showRestaurants() {
+    let name = Math.floor(Math.random() * Math.floor(100));
+    // this.pastVisits.push({restaurant_id: name});
+    this.visitsService.appendData({restaurant_id: name, times: 1}).subscribe((answ) => {
+    });
+    console.log(this.pastVisits);
+  }
+
+  async presentServerError() {
+    const alert = await this.alertController.create({
+      header: 'Can not get past visits',
+      message: 'There was an error connecting to the server.',
+      buttons: ['OK']
+    });
+
+    await alert.present();
   }
 }
