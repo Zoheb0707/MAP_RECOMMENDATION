@@ -3,9 +3,8 @@ import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { Storage } from '@ionic/storage';
 import { VisitsService } from '../services/visits.service';
-import { Events, LoadingController, ActionSheetController  } from '@ionic/angular';
+import { Events, LoadingController, ActionSheetController, AlertController  } from '@ionic/angular';
 import { Restaurant } from './restaurant';
-import { AlertController } from '@ionic/angular';
 
 
 @Component({
@@ -24,7 +23,7 @@ export class Tab1Page implements OnInit {
   sortingOption = undefined;
 
   constructor(private router: Router, private http: HttpClient, private visitsService: VisitsService, private storage: Storage, 
-              private loadingController: LoadingController, private alertController: AlertController, 
+              private loadingController: LoadingController, private alertController: AlertController,
               private actionSheetController: ActionSheetController, private events: Events) { }
 
   ngOnInit() {
@@ -60,10 +59,9 @@ export class Tab1Page implements OnInit {
     this.storage.get('ID').then((val: string) => {
       this.visitsService.searchData(val).subscribe(
         // If result is loaded
-        (answ) => {
-          console.log('answ');
+        (ans) => {
           // Subscribe new list of restaurants
-          this.pastVisits = answ;
+          this.pastVisits = ans;
           this.sortVisits(this.sortingOption);
           // If refresh
           if (event !== undefined) {
@@ -74,7 +72,6 @@ export class Tab1Page implements OnInit {
         },
         // If there was an error connecting to the server
         (err) => {
-          console.log('err');
           if (event !== undefined) {
             event.target.complete();
           } else {
@@ -93,6 +90,9 @@ export class Tab1Page implements OnInit {
     });
   }
 
+  /**
+   * Presents error about problem with a server
+   */
   async presentServerError() {
     const alert = await this.alertController.create({
       header: 'Can not get past visits',
@@ -103,7 +103,11 @@ export class Tab1Page implements OnInit {
     await alert.present();
   }
 
-  async sortVisits(option: string) {
+  /**
+   * Sorts stored past visits in a manner specified by a passed parameter
+   * @param option type of sorting
+   */
+  sortVisits(option: string) {
     switch (option) {
       case 'alphabetic': {
         this.pastVisits.sort((r1, r2) => r1.restaurant_id.localeCompare(r2.restaurant_id));
@@ -122,7 +126,10 @@ export class Tab1Page implements OnInit {
     }
   }
 
-  async presentActionSheet() {
+  /**
+   * Presents action sheet containing different sorting options
+   */
+  async presentSortingOptions() {
     const actionSheet = await this.actionSheetController.create({
       header: 'Sorting Options',
       buttons: [{

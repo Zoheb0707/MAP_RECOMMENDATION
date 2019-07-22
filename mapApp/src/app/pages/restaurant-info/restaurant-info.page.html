@@ -1,0 +1,12 @@
+<ion-header>
+  <ion-toolbar *ngIf="loaded">
+    <ion-buttons slot="secondary">
+      <ion-button (click)="back()">
+        Back
+      </ion-button>
+    </ion-buttons>
+    <ion-title>{{ this.info?.name }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content> </ion-content>

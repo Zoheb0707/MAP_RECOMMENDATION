@@ -6,7 +6,9 @@ const routes: Routes = [
   { path: 'login', loadChildren: './auth/login/login.module#LoginPageModule' },
   { path: 'app', loadChildren: './tabs/tabs.module#TabsPageModule'},
   { path: 'searches', loadChildren: './searches/searches.module#SearchesPageModule' },
-  { path: '', redirectTo: '/login', pathMatch: 'full'}
+  { path: '', redirectTo: '/login', pathMatch: 'full'},
+  { path: 'restaurant/:id', loadChildren: './pages/restaurant-info/restaurant-info.module#RestaurantInfoPageModule' }
+
 ];
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
