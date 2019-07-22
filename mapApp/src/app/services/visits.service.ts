@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
-import { map } from 'rxjs/operators';
+import { tap, timeout, timeoutWith, map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -15,10 +14,12 @@ export class VisitsService {
   constructor(private http: HttpClient) { }
 
   searchData(title: string): Observable<any> {
-    return this.http.get(`${this.url_get}?mode=${encodeURI(title)}`);
+    return this.http.get(`${this.url_get}?mode=${encodeURI(title)}`).pipe(
+      timeout(10000)
+    );
   }
 
-  appendData(restaurant: Restaurant) {
+  appendData(restaurant) {
     const httpOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/x-www-form-urlencoded'
@@ -35,7 +36,7 @@ export class VisitsService {
       }
     });
 
-    return this.http.post<Restaurant>(this.url_change, params, httpOptions).pipe(
+    return this.http.post(this.url_change, params, httpOptions).pipe(
       tap(async (res) => {
       })
     );

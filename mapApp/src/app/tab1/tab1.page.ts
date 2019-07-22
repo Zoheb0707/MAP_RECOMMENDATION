@@ -50,8 +50,7 @@ export class Tab1Page implements OnInit {
   async reloadVisits(event?) {
     if (event === undefined) {
       const loading = await this.loadingController.create({
-        message: 'Loading your visits',
-        duration: 10000
+        message: 'Loading your visits'
       });
       await loading.present();
     }
@@ -59,6 +58,7 @@ export class Tab1Page implements OnInit {
       this.visitsService.searchData(val).subscribe(
         // If result is loaded
         (answ) => {
+          console.log('answ');
           // Subscribe new list of restaurants
           this.pastVisits = answ;
           // If refresh
@@ -70,12 +70,12 @@ export class Tab1Page implements OnInit {
         },
         // If there was an error connecting to the server
         (err) => {
+          console.log('err');
           if (event !== undefined) {
             event.target.complete();
           } else {
             this.loadingController.dismiss();
           }
-          this.pastVisits = undefined;
           this.presentServerError();
         }
       );
