@@ -13,7 +13,6 @@ export class SuggestionsService {
   constructor(private http: HttpClient) { }
 
   getSuggestions(title: string): Observable<any> {
-    console.log(title);
     return this.http.get(this.url);
   }
 }

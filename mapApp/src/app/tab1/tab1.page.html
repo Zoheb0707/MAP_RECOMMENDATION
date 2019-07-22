@@ -1,5 +1,10 @@
 <ion-header>
   <ion-toolbar>
+    <ion-buttons slot="primary">
+      <ion-button (click)="presentActionSheet()">
+        Sort
+      </ion-button>
+    </ion-buttons>
     <ion-title>
       Past Visits
     </ion-title>
@@ -8,8 +13,7 @@
 
 <ion-content>
   <ion-refresher slot="fixed" (ionRefresh)="refreshVisits($event)">
-    <ion-refresher-content
-      pulling-text="Refreshing...">
+    <ion-refresher-content pulling-text="Refreshing...">
     </ion-refresher-content>
   </ion-refresher>
 
@@ -21,9 +25,14 @@
 
       <ion-card-content>
         You visited this place {{ restaurant.times }} times.
+        Average Rating was {{ restaurant.avg_rating }}.
       </ion-card-content>
     </ion-card>
   </ion-list>
 
-  <div *ngIf="debug"> <ion-button color="danger" (click)="showRestaurants()">Add Random Place</ion-button> </div>
+  <div *ngIf="debug">
+    <ion-button color="danger" (click)="showRestaurants()"
+      >Add Random Place</ion-button
+    >
+  </div>
 </ion-content>

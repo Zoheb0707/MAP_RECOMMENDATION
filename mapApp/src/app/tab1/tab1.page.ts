@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { Storage } from '@ionic/storage';
 import { VisitsService } from '../services/visits.service';
-import { LoadingController } from '@ionic/angular';
+import { Events, LoadingController, ActionSheetController  } from '@ionic/angular';
 import { Restaurant } from './restaurant';
 import { AlertController } from '@ionic/angular';
 
@@ -13,6 +13,7 @@ import { AlertController } from '@ionic/angular';
   templateUrl: 'tab1.page.html',
   styleUrls: ['tab1.page.scss']
 })
+
 export class Tab1Page implements OnInit {
 
   /**
@@ -20,9 +21,11 @@ export class Tab1Page implements OnInit {
    */
   pastVisits: Restaurant[];
   debug = false;
+  sortingOption = undefined;
 
   constructor(private router: Router, private http: HttpClient, private visitsService: VisitsService, private storage: Storage, 
-              private loadingController: LoadingController, private alertController: AlertController) { }
+              private loadingController: LoadingController, private alertController: AlertController, 
+              private actionSheetController: ActionSheetController, private events: Events) { }
 
   ngOnInit() {
     this.reloadVisits();
@@ -61,6 +64,7 @@ export class Tab1Page implements OnInit {
           console.log('answ');
           // Subscribe new list of restaurants
           this.pastVisits = answ;
+          this.sortVisits(this.sortingOption);
           // If refresh
           if (event !== undefined) {
             event.target.complete();
@@ -87,7 +91,6 @@ export class Tab1Page implements OnInit {
     // this.pastVisits.push({restaurant_id: name});
     this.visitsService.appendData({restaurant_id: name, times: 1}).subscribe((answ) => {
     });
-    console.log(this.pastVisits);
   }
 
   async presentServerError() {
@@ -98,5 +101,55 @@ export class Tab1Page implements OnInit {
     });
 
     await alert.present();
+  }
+
+  async sortVisits(option: string) {
+    switch (option) {
+      case 'alphabetic': {
+        this.pastVisits.sort((r1, r2) => r1.restaurant_id.localeCompare(r2.restaurant_id));
+        break;
+      }
+
+      case 'times': {
+        this.pastVisits.sort((r1, r2) => +r1.times > +r2.times ? -1 : +r1.times < +r2.times ? 1 : 0);
+        break;
+      }
+
+      case 'rating': {
+        this.pastVisits.sort((r1, r2) => +r1.avg_rating > +r2.avg_rating ? -1 : +r1.avg_rating < +r2.avg_rating ? 1 : 0);
+        break;
+      }
+    }
+  }
+
+  async presentActionSheet() {
+    const actionSheet = await this.actionSheetController.create({
+      header: 'Sorting Options',
+      buttons: [{
+        text: 'Name',
+        handler: () => {
+          this.sortingOption = 'alphabetic';
+          this.sortVisits(this.sortingOption);
+        }
+      }, {
+        text: 'Times',
+        handler: () => {
+          this.sortingOption = 'times';
+          this.sortVisits(this.sortingOption);
+        }
+      }, {
+        text: 'Rating',
+        handler: () => {
+          this.sortingOption = 'rating';
+          this.sortVisits(this.sortingOption);
+        }
+      }, {
+        text: 'Back',
+        role: 'destructive',
+        handler: () => {
+        }
+      }]
+    });
+    await actionSheet.present();
   }
 }
