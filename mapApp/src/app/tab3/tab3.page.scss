@@ -1,1 +1,12 @@
+.profilePic{
+    height: 150px;
+    width: 150px;
+    margin: auto;
+}
 
+ion-content {
+    --overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
