@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Storage } from '@ionic/storage';
-import { NavController } from '@ionic/angular';
+import { NavController, ActionSheetController, LoadingController } from '@ionic/angular';
 
 import { AuthService } from '../auth/auth.service';
 import { User } from '../auth/user';
@@ -15,18 +15,24 @@ import { User } from '../auth/user';
 export class Tab3Page implements OnInit {
 
   name: string;
+  numberOfSlides: number;
+  loaded: false;
 
   user: User = {user_id: '',
                 first_name: '',
                 last_name: '',
                 password: '',
+                place: 'Nizhny Novgorod', 
+                preferences: ['Italian', 'Russian', 'Chinese', 'Indian', 'American', 'Polish', 'Roumanian', 'Belarussian', 'Spanish','Japanese', 'Egypt', 'Canadian']
   };
 
   mySlideOptions = {
     pager:true
   };
 
-  constructor(private  authService: AuthService, private  router: Router, private storage: Storage, private navCtrl: NavController) {
+  constructor(private  authService: AuthService, private  router: Router, private storage: Storage, private navCtrl: NavController,
+              private actionSheetController: ActionSheetController, private loadingController: LoadingController) {
+
   }
 
   ngOnInit() {
@@ -34,6 +40,18 @@ export class Tab3Page implements OnInit {
   }
 
   async getUser() {
+    const loading = await this.loadingController.create({
+      message: 'Loading your profile'
+    });
+    await loading.present();
+
+    this.loadProfile().then(() => {
+      this.loadingController.dismiss();
+      this.loaded = true;
+    });
+  }
+
+  async loadProfile() {
     await this.storage.get('FIRST_NAME').then((val: string) => {
       this.user.first_name = val;
     });
@@ -44,15 +62,47 @@ export class Tab3Page implements OnInit {
 
     await this.storage.get('user_id').then((val: string) => {
       this.user.user_id = val;
+      this.numberOfSlides = (Math.ceil(this.user.preferences.length / 5));
+      // console.log(this.numberOfSlides);
     });
-  }
-
-  editProfile() {
-    alert('Let\'s change the profile!');
   }
 
   async onChangeExit() {
     await this.authService.logout();
     this.navCtrl.navigateBack('login');
+  }
+
+
+  async presentSettingOptions() {
+    const actionSheet = await this.actionSheetController.create({
+      header: 'Sorting Options',
+      buttons: [{
+        text: 'Edit Profile',
+        handler: () => {
+          alert('Let\'s change the profile!');
+        }
+      }, {
+        text: 'Log out',
+        role: 'destructive',
+        handler: () => {
+          this.onChangeExit();
+        }
+      }]
+    });
+    await actionSheet.present();
+  }
+
+  arrayOf(n: number): any[] {
+    let arr = Array.apply(null, {length: n}).map(Number.call, Number);
+    return(arr);
+  }
+
+  getSubarray(n: number): any[] {
+    // console.log(n);
+    let currentIndex = n*5;
+    let toReturn = this.user.preferences.slice(currentIndex, currentIndex + 5);
+    // console.log(currentIndex);
+    // console.log(toReturn);
+    return toReturn;
   }
 }
