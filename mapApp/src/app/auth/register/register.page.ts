@@ -47,8 +47,8 @@ export class RegisterPage implements OnInit {
   ngOnInit() {
   }
 
-  register(form: NgForm) {
-    this.authService.register(form.value).then((res) => {
+  async register(form: NgForm) {
+    await this.authService.register(form.value).then((res) => {
       this.navCtrl.navigateForward('/app/tabs/search');
     },
     (err) => {

@@ -27,7 +27,14 @@ export class LoginPage implements OnInit {
 
   ngOnInit() {
     let user = this.fAuth.auth.currentUser;
+    this.isRemembered();
     console.log(user);
+  }
+
+  async isRemembered() {
+    await this.authService.isRemembered().then((res) => {
+      console.log(res);
+    });
   }
 
   async login(form: any) {

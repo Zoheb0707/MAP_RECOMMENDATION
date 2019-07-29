@@ -1,8 +1,10 @@
 export interface User {
     email: string;
-    first_name: string;
-    last_name: string;
+    name: {
+        first: string;
+        last: string;
+    };
     password: string;
-    place: string;
+    city: string;
     preferences: string[];
 }

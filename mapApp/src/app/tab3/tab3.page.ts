@@ -19,11 +19,13 @@ export class Tab3Page implements OnInit {
   loaded = false;
 
   user: User = {email: '',
-                first_name: '',
-                last_name: '',
+                name: {
+                  first: '',
+                  last: ''
+                },
                 password: '',
-                place: 'Nizhny Novgorod', 
-                preferences: ['Italian', 'Russian', 'Chinese', 'Indian', 'American', 'Polish', 'Roumanian', 'Belarussian', 'Spanish','Japanese', 'Egypt', 'Canadian']
+                city: '',
+                preferences: []
   };
 
   constructor(private  authService: AuthService, private  router: Router, private storage: Storage, private navCtrl: NavController,
@@ -49,17 +51,25 @@ export class Tab3Page implements OnInit {
 
   async loadProfile() {
     await this.storage.get('FIRST_NAME').then((val: string) => {
-      this.user.first_name = val;
+      this.user.name.first = val;
     });
 
     await this.storage.get('LAST_NAME').then((val: string) => {
-      this.user.last_name = val;
+      this.user.name.last = val;
     });
 
     await this.storage.get('user_id').then((val: string) => {
       this.user.email = val;
-      this.numberOfSlides = (Math.ceil(this.user.preferences.length / 5));
       // console.log(this.numberOfSlides);
+    });
+
+    await this.storage.get('LOCATION').then((val: string) => {
+      this.user.city = val;
+    });
+
+    await this.storage.get('PREFERENCES').then((val) => {
+      this.user.preferences = val;
+      this.numberOfSlides = (Math.ceil(this.user.preferences.length / 5));
     });
   }
 

@@ -23,46 +23,30 @@ export class AuthService {
   constructor(private  httpClient: HttpClient, private  storage: Storage, private fAuth: AngularFireAuth,
               private fStone: AngularFirestore, private db: AngularFireDatabase) { }
 
-  register(user: User) {
+  async register(user: any) {
 
-    return new Promise<any>((resolve, reject) => {
+    return await new Promise<any>((resolve, reject) => {
       this.fAuth.auth.createUserWithEmailAndPassword(user.email, user.password)
       .then(
         (res) => {
+          this.fStone.collection('users').doc(res.user.uid).set({
+            name: {
+              first: user.first_name,
+              last: user.last_name
+            },
+            city: 'Seattle, WA',
+            preferences: ['Pf1', 'Pf2', 'Pf3', 'Pf4', 'Pf5']
+          });
+          this.storage.set('ID', res.user.uid);
+          this.storage.set('FIRST_NAME', user.first_name);
+          this.storage.set('LAST_NAME', user.last_name);
+          this.storage.set('LOCATION', 'Seattle, WA');
+          this.storage.set('PREFERENCES', ['Pf1', 'Pf2', 'Pf3', 'Pf4', 'Pf5']);
+          this.authSubject.next(true);
           resolve(res);
         },
         err => reject(err));
     });
-
-    // const httpOptions = {
-    //   headers: new HttpHeaders({
-    //     'Content-Type': 'application/x-www-form-urlencoded'
-    //   })
-    // };
-
-    // const params = new HttpParams({
-    //   fromObject: {
-    //     mode: 'new',
-    //     user_id: user.user_id,
-    //     password: user.password,
-    //     first_name: user.first_name,
-    //     last_name: user.last_name
-    //   }
-    // });
-
-    // return this.httpClient.post<AuthResponse>(`${this.AUTH_SERVER_ADDRESS}/update_users.php`, params, httpOptions).pipe(
-    //   tap(async (res: AuthResponse ) => {
-
-    //     if (res.user) {
-    //       await this.storage.set('EXPIRES_IN', res.user.expires_in);
-    //       await this.storage.set('ID', res.user.user_id);
-    //       await this.storage.set('FIRST_NAME', res.user.first_name);
-    //       await this.storage.set('LAST_NAME', res.user.last_name);
-    //       this.authSubject.next(true);
-    //     }
-    //   })
-
-    // );
   }
 
   async login(user: User) {
@@ -71,44 +55,18 @@ export class AuthService {
       this.fAuth.auth.signInWithEmailAndPassword(user.email, user.password)
       .then(
         (res) => {
-          console.log(res.user.uid);
-          this.fStone.collection('users').doc(res.user.uid).valueChanges().subscribe(data => {
+          this.fStone.collection('users').doc(res.user.uid).valueChanges().subscribe((data: User) => {
             this.storage.set('ID', res.user.uid);
             this.storage.set('FIRST_NAME', data.name.first);
             this.storage.set('LAST_NAME', data.name.last);
             this.storage.set('LOCATION', data.city);
+            this.storage.set('PREFERENCES', data.preferences);
             this.authSubject.next(true);
           });
           resolve(res);
         },
         err => reject(err));
     });
-
-    // const httpOptions = {
-    //   headers: new HttpHeaders({
-    //     'Content-Type': 'application/x-www-form-urlencoded'
-    //   })
-    // };
-
-    // const params = new HttpParams({
-    //   fromObject: {
-    //     user_id: user.user_id,
-    //     password: user.password
-    //   }
-    // });
-
-    // return this.httpClient.post(`${this.AUTH_SERVER_ADDRESS}/authenticate.php`, params, httpOptions).pipe(
-    //   tap(async (res: AuthResponse) => {
-
-    //     if (res.user) {
-    //       await this.storage.set('EXPIRES_IN', res.user.expires_in);
-    //       await this.storage.set('ID', res.user.user_id);
-    //       await this.storage.set('FIRST_NAME', res.user.first_name);
-    //       await this.storage.set('LAST_NAME', res.user.last_name);
-    //       this.authSubject.next(true);
-    //     }
-    //   })
-    // );
   }
 
   async logout() {
@@ -125,5 +83,9 @@ export class AuthService {
 
   isLoggedIn() {
     return this.authSubject.asObservable();
+  }
+
+  async isRemembered() {
+    return await this.storage.get('EMAIL');
   }
 }

@@ -14,6 +14,12 @@
                 <ion-input name="password" type="password" placeholder="Password" ngModel required></ion-input>
               </ion-item>
             </div>
+            <div>
+              <ion-item lines="none">
+                <ion-label>Remember Me</ion-label>
+                <ion-checkbox color="primary" checked slot="start"></ion-checkbox>
+              </ion-item>
+            </div>
             <div padding>
               <ion-button size="large" type="submit" [disabled]="form.invalid" expand="block">Login</ion-button>
             </div>
