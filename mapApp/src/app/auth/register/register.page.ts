@@ -4,6 +4,8 @@ import { NavController } from '@ionic/angular';
 import { FormBuilder, FormGroup, Validators, FormControl, NgForm, ValidatorFn, AbstractControl } from '@angular/forms';
 import { User } from '../user';
 
+import { AngularFireAuth } from "angularfire2/auth";
+
 @Component({
   selector: 'app-register',
   templateUrl: './register.page.html',
@@ -22,7 +24,7 @@ export class RegisterPage implements OnInit {
       Validators.pattern('[a-zA-Z ]*'),
       Validators.required
     ])),
-    user_id: new FormControl('', Validators.compose([
+    email: new FormControl('', Validators.compose([
       Validators.required,
       Validators.email
     ])),
@@ -39,21 +41,30 @@ export class RegisterPage implements OnInit {
 
   user: User;
 
-  constructor(private authService: AuthService, private navCtrl: NavController, private formBuilder: FormBuilder) { }
+  constructor(private authService: AuthService, private navCtrl: NavController, private formBuilder: FormBuilder,
+              private fAuth: AngularFireAuth) { }
 
   ngOnInit() {
   }
 
   register(form: NgForm) {
-    this.user = form.value;
-    this.authService.register(form.value).subscribe((res) => {
+    this.authService.register(form.value).then((res) => {
       this.navCtrl.navigateForward('/app/tabs/search');
     },
     (err) => {
-      if (err.status === 409) {
-        alert('Email already exists!');
-      }
+      alert('Error!');
+      console.log(err);
     });
+
+    // this.user = form.value;
+    // this.authService.register(form.value).subscribe((res) => {
+    //   this.navCtrl.navigateForward('/app/tabs/search');
+    // },
+    // (err) => {
+    //   if (err.status === 409) {
+    //     alert('Email already exists!');
+    //   }
+    // });
   }
 
   equalsTo(field_name: any): ValidatorFn {

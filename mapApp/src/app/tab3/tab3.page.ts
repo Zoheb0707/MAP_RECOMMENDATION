@@ -16,18 +16,14 @@ export class Tab3Page implements OnInit {
 
   name: string;
   numberOfSlides: number;
-  loaded: false;
+  loaded = false;
 
-  user: User = {user_id: '',
+  user: User = {email: '',
                 first_name: '',
                 last_name: '',
                 password: '',
                 place: 'Nizhny Novgorod', 
                 preferences: ['Italian', 'Russian', 'Chinese', 'Indian', 'American', 'Polish', 'Roumanian', 'Belarussian', 'Spanish','Japanese', 'Egypt', 'Canadian']
-  };
-
-  mySlideOptions = {
-    pager:true
   };
 
   constructor(private  authService: AuthService, private  router: Router, private storage: Storage, private navCtrl: NavController,
@@ -61,7 +57,7 @@ export class Tab3Page implements OnInit {
     });
 
     await this.storage.get('user_id').then((val: string) => {
-      this.user.user_id = val;
+      this.user.email = val;
       this.numberOfSlides = (Math.ceil(this.user.preferences.length / 5));
       // console.log(this.numberOfSlides);
     });

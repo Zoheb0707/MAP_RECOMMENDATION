@@ -8,8 +8,8 @@ import { tap, timeout, timeoutWith, map } from 'rxjs/operators';
 })
 export class VisitsService {
 
-  url_get = 'http://192.168.0.13/get_visits.php';
-  url_change = 'http://192.168.0.13/update_restaurants.php';
+  url_get = 'https://73.53.29.38:80/get_visits.php';
+  url_change = 'https://73.53.29.38:80/update_restaurants.php';
 
   constructor(private http: HttpClient) { }
 

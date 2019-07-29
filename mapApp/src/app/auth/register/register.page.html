@@ -28,10 +28,10 @@
 
               <ion-item>
                 <ion-label position="floating">E-mail</ion-label>
-                <ion-input formControlName="user_id" type="email" [class.invalid]="!registerForm.controls.user_id.valid"></ion-input>
+                <ion-input formControlName="email" type="email" [class.invalid]="!registerForm.controls.email.valid"></ion-input>
               </ion-item>
 
-              <ion-item *ngIf="registerForm.get('user_id').hasError('email')">
+              <ion-item *ngIf="registerForm.get('email').hasError('email')">
                 <p>Please enter a valid e-mail.</p>
               </ion-item>
 

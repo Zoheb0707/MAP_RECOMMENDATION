@@ -8,7 +8,7 @@ import { timeout } from 'rxjs/operators';
 })
 export class RestaurantService {
 
-  url_get = 'http://192.168.0.13/get_restaurants.php';
+  url_get = 'https://73.53.29.38:80/get_restaurants.php';
 
   constructor(private http: HttpClient) { }
 
