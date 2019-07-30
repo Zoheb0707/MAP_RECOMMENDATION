@@ -16,10 +16,6 @@ import { AngularFireDatabase } from 'angularfire2/database';
 })
 export class AuthService {
 
-  AUTH_SERVER_ADDRESS = 'https://73.53.29.38:80';
-
-  authSubject = new BehaviorSubject(false);
-
   constructor(private  httpClient: HttpClient, private  storage: Storage, private fAuth: AngularFireAuth,
               private fStone: AngularFirestore, private db: AngularFireDatabase) { }
 
@@ -37,12 +33,9 @@ export class AuthService {
             city: 'Seattle, WA',
             preferences: ['Pf1', 'Pf2', 'Pf3', 'Pf4', 'Pf5']
           });
-          this.storage.set('ID', res.user.uid);
-          this.storage.set('FIRST_NAME', user.first_name);
-          this.storage.set('LAST_NAME', user.last_name);
-          this.storage.set('LOCATION', 'Seattle, WA');
-          this.storage.set('PREFERENCES', ['Pf1', 'Pf2', 'Pf3', 'Pf4', 'Pf5']);
-          this.authSubject.next(true);
+
+          const currentUser = this.fAuth.auth.currentUser;
+          currentUser.sendEmailVerification();
           resolve(res);
         },
         err => reject(err));
@@ -55,14 +48,11 @@ export class AuthService {
       this.fAuth.auth.signInWithEmailAndPassword(user.email, user.password)
       .then(
         (res) => {
-          this.fStone.collection('users').doc(res.user.uid).valueChanges().subscribe((data: User) => {
-            this.storage.set('ID', res.user.uid);
-            this.storage.set('FIRST_NAME', data.name.first);
-            this.storage.set('LAST_NAME', data.name.last);
-            this.storage.set('LOCATION', data.city);
-            this.storage.set('PREFERENCES', data.preferences);
-            this.authSubject.next(true);
-          });
+          if (res.user.emailVerified) {
+            this.fStone.collection('users').doc(res.user.uid).valueChanges().subscribe((data: User) => {
+              this.loadUserInfo(res.user.uid, data);
+            });
+          }
           resolve(res);
         },
         err => reject(err));
@@ -75,17 +65,29 @@ export class AuthService {
       this.storage.remove('ID');
       this.storage.remove('FIRST_NAME');
       this.storage.remove('LAST_NAME');
-      this.authSubject.next(false);
     }).catch((error) => {
       // An error happened.
     });
   }
 
   isLoggedIn() {
-    return this.authSubject.asObservable();
+    // function to check if logged in
   }
 
   async isRemembered() {
     return await this.storage.get('EMAIL');
+  }
+
+  private loadUserInfo(uid: string, user: User) {
+    this.storage.set('ID', uid);
+    this.storage.set('FIRST_NAME', user.name.first);
+    this.storage.set('LAST_NAME', user.name.last);
+    this.storage.set('LOCATION', user.city);
+    this.storage.set('PREFERENCES', user.preferences);
+  }
+
+  verifyUser() {
+    const currentUser = this.fAuth.auth.currentUser;
+    currentUser.sendEmailVerification();
   }
 }
