@@ -25,7 +25,8 @@ export class Tab3Page implements OnInit {
                 },
                 password: '',
                 city: '',
-                preferences: []
+                preferences: [],
+                visits: []
   };
 
   constructor(private  authService: AuthService, private  router: Router, private storage: Storage, private navCtrl: NavController,

@@ -66,24 +66,38 @@ export class Tab1Page implements OnInit {
         async (ans) => {
           const refreshedPastVisits = [];
 
-          for (const element of ans.visits) {
-            await element.get().then(async (res) => {
-              refreshedPastVisits.push(res.data());
-            });
-          }
-
-          // Assign new visits
-          this.pastVisitsTwo = refreshedPastVisits;
-
-          // If refresh
-          if (event !== undefined) {
-            event.target.complete();
+          if (ans.data().visits !== undefined) {
+            for (const element of ans.data().visits) {
+              await element.get().then(async (res) => {
+                refreshedPastVisits.push(res.data());
+              });
+            }
+  
+            // Assign new visits
+            this.pastVisitsTwo = refreshedPastVisits;
+  
+            // Sort results
+            this.sortVisits(this.sortingOption);
+  
+            // If refresh
+            if (event !== undefined) {
+              event.target.complete();
+            } else {
+              this.loadingController.dismiss();
+            }
           } else {
-            this.loadingController.dismiss();
+            console.log('err');
+            if (event !== undefined) {
+              event.target.complete();
+            } else {
+              this.loadingController.dismiss();
+            }
+            this.presentServerError();
           }
         },
         // If there was an error connecting to the server
         (err) => {
+          console.log(err);
           if (event !== undefined) {
             event.target.complete();
           } else {

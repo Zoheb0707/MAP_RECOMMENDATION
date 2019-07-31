@@ -46,6 +46,6 @@ export class VisitsService {
   }
 
   getVisits(uid: string): Observable<any> {
-    return this.fStone.collection('users').doc(uid).valueChanges();
+    return this.fStone.collection('users').doc(uid).get();
   }
 }
