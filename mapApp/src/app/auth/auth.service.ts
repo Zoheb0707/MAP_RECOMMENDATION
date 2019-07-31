@@ -50,10 +50,13 @@ export class AuthService {
         (res) => {
           if (res.user.emailVerified) {
             this.fStone.collection('users').doc(res.user.uid).valueChanges().subscribe((data: User) => {
-              this.loadUserInfo(res.user.uid, data);
+              this.loadUserInfo(res.user.uid, data).then(
+                () => resolve(res)
+              );
             });
+          } else {
+            reject(res);
           }
-          resolve(res);
         },
         err => reject(err));
     });
@@ -78,12 +81,14 @@ export class AuthService {
     return await this.storage.get('EMAIL');
   }
 
-  private loadUserInfo(uid: string, user: User) {
-    this.storage.set('ID', uid);
-    this.storage.set('FIRST_NAME', user.name.first);
-    this.storage.set('LAST_NAME', user.name.last);
-    this.storage.set('LOCATION', user.city);
-    this.storage.set('PREFERENCES', user.preferences);
+  private async loadUserInfo(uid: string, user: User) {
+    console.log('Store called');
+    await this.storage.set('ID', uid);
+    await this.storage.set('FIRST_NAME', user.name.first);
+    await this.storage.set('LAST_NAME', user.name.last);
+    await this.storage.set('LOCATION', user.city);
+    await this.storage.set('PREFERENCES', user.preferences);
+    console.log('Stored everything!');
   }
 
   verifyUser() {

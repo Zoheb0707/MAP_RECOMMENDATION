@@ -18,14 +18,13 @@
   </ion-refresher>
 
   <ion-list>
-    <ion-card *ngFor="let restaurant of pastVisits" [routerLink]="['/', 'restaurant', restaurant.restaurant_id]">
+    <ion-card *ngFor="let restaurant of pastVisitsTwo" [routerLink]="['/', 'restaurant', restaurant.pid]">
       <ion-card-header>
-        <ion-card-title>{{ restaurant.restaurant_id }}</ion-card-title>
+        <ion-card-title>{{ restaurant.name }}</ion-card-title>
       </ion-card-header>
 
       <ion-card-content>
-        You visited this place {{ restaurant.times }} times.
-        Average Rating was {{ restaurant.avg_rating }}.
+        You visited this place on {{ restaurant.date.seconds * 1000 | date: 'dd/MM/yyyy' }}.
       </ion-card-content>
     </ion-card>
   </ion-list>

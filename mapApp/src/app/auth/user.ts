@@ -7,4 +7,5 @@ export interface User {
     password: string;
     city: string;
     preferences: string[];
+    visits: any[];
 }

@@ -3,6 +3,9 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { tap, timeout, timeoutWith, map } from 'rxjs/operators';
 
+import { AngularFirestore } from 'angularfire2/firestore';
+import { User } from '../auth/user';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -11,7 +14,7 @@ export class VisitsService {
   url_get = 'https://73.53.29.38:80/get_visits.php';
   url_change = 'https://73.53.29.38:80/update_restaurants.php';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private fStone: AngularFirestore) { }
 
   searchData(title: string): Observable<any> {
     return this.http.get(`${this.url_get}?mode=${encodeURI(title)}`).pipe(
@@ -40,5 +43,9 @@ export class VisitsService {
       tap(async (res) => {
       })
     );
+  }
+
+  getVisits(uid: string): Observable<any> {
+    return this.fStone.collection('users').doc(uid).valueChanges();
   }
 }

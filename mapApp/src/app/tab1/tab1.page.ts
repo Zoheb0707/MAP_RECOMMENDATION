@@ -5,6 +5,7 @@ import { Storage } from '@ionic/storage';
 import { VisitsService } from '../services/visits.service';
 import { Events, LoadingController, ActionSheetController, AlertController  } from '@ionic/angular';
 import { Restaurant } from './restaurant';
+import { User } from '../auth/user';
 
 
 @Component({
@@ -19,6 +20,7 @@ export class Tab1Page implements OnInit {
    * Stores a list of previously visited restaurants
    */
   pastVisits: Restaurant[];
+  pastVisitsTwo = [];
   debug = false;
   sortingOption = undefined;
 
@@ -50,19 +52,29 @@ export class Tab1Page implements OnInit {
    * @param [event] IonRefresh event
    */
   async reloadVisits(event?) {
+
     if (event === undefined) {
       const loading = await this.loadingController.create({
         message: 'Loading your visits'
       });
       await loading.present();
     }
-    this.storage.get('ID').then((val: string) => {
-      this.visitsService.searchData(val).subscribe(
+
+    this.storage.get('ID').then((uid: string) => {
+      this.visitsService.getVisits(uid).subscribe(
         // If result is loaded
-        (ans) => {
-          // Subscribe new list of restaurants
-          this.pastVisits = ans;
-          this.sortVisits(this.sortingOption);
+        async (ans) => {
+          const refreshedPastVisits = [];
+
+          for (const element of ans.visits) {
+            await element.get().then(async (res) => {
+              refreshedPastVisits.push(res.data());
+            });
+          }
+
+          // Assign new visits
+          this.pastVisitsTwo = refreshedPastVisits;
+
           // If refresh
           if (event !== undefined) {
             event.target.complete();
@@ -110,7 +122,12 @@ export class Tab1Page implements OnInit {
   sortVisits(option: string) {
     switch (option) {
       case 'alphabetic': {
-        this.pastVisits.sort((r1, r2) => r1.restaurant_id.localeCompare(r2.restaurant_id));
+        this.pastVisitsTwo.sort((r1, r2) => r1.name.localeCompare(r2.name));
+        break;
+      }
+
+      case 'date': {
+        this.pastVisitsTwo.sort((r1, r2) => +r1.date.seconds > +r2.date.seconds ? -1 : +r1.date.seconds < +r2.date.seconds ? 1 : 0);
         break;
       }
 
@@ -138,19 +155,29 @@ export class Tab1Page implements OnInit {
           this.sortingOption = 'alphabetic';
           this.sortVisits(this.sortingOption);
         }
-      }, {
-        text: 'Times',
+      }, 
+      // {
+      //   text: 'Times',
+      //   handler: () => {
+      //     this.sortingOption = 'times';
+      //     this.sortVisits(this.sortingOption);
+      //   }
+      // }, 
+      {
+        text: 'Date',
         handler: () => {
-          this.sortingOption = 'times';
+          this.sortingOption = 'date';
           this.sortVisits(this.sortingOption);
         }
-      }, {
-        text: 'Rating',
-        handler: () => {
-          this.sortingOption = 'rating';
-          this.sortVisits(this.sortingOption);
-        }
-      }, {
+      }, 
+      // {
+      //   text: 'Rating',
+      //   handler: () => {
+      //     this.sortingOption = 'rating';
+      //     this.sortVisits(this.sortingOption);
+      //   }
+      // },
+      {
         text: 'Back',
         role: 'destructive',
         handler: () => {
@@ -158,5 +185,18 @@ export class Tab1Page implements OnInit {
       }]
     });
     await actionSheet.present();
+  }
+
+  async getVisits() {
+    this.storage.get('ID').then(async (uid: string) => {
+      this.visitsService.getVisits(uid).subscribe(async (res: User) => {
+        this.pastVisitsTwo = await Promise.all(res.visits.map(async (val) => {
+          await val.get().then(async (dat) => {
+            console.log(dat.data());
+            return await dat.data();
+          });
+        }));
+      });
+    });
   }
 }
