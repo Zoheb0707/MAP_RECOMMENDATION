@@ -6,6 +6,9 @@ import { NavController, ActionSheetController, LoadingController } from '@ionic/
 import { AuthService } from '../auth/auth.service';
 import { User } from '../auth/user';
 
+import { AngularFireAuth } from 'angularfire2/auth';
+import * as firebase from 'firebase/app';
+
 @Component({
   selector: 'app-tab3',
   templateUrl: 'tab3.page.html',
@@ -15,7 +18,7 @@ import { User } from '../auth/user';
 export class Tab3Page implements OnInit {
 
   name: string;
-  numberOfSlides: number;
+  numberOfSlides = 1;
   loaded = false;
 
   user: User = {email: '',
@@ -30,7 +33,8 @@ export class Tab3Page implements OnInit {
   };
 
   constructor(private  authService: AuthService, private  router: Router, private storage: Storage, private navCtrl: NavController,
-              private actionSheetController: ActionSheetController, private loadingController: LoadingController) {
+              private actionSheetController: ActionSheetController, private loadingController: LoadingController,
+              public fAuth: AngularFireAuth,) {
 
   }
 
@@ -51,27 +55,38 @@ export class Tab3Page implements OnInit {
   }
 
   async loadProfile() {
-    await this.storage.get('FIRST_NAME').then((val: string) => {
-      this.user.name.first = val;
-    });
+    // await this.authService.getUser();
+    await this.authService.getUser().then((res) => {
+      console.log(res.data());
+      this.setUser(res.data());
+    })
+    // await this.storage.get('FIRST_NAME').then((val: string) => {
+    //   this.user.name.first = val;
+    // });
 
-    await this.storage.get('LAST_NAME').then((val: string) => {
-      this.user.name.last = val;
-    });
+    // await this.storage.get('LAST_NAME').then((val: string) => {
+    //   this.user.name.last = val;
+    // });
 
-    await this.storage.get('user_id').then((val: string) => {
-      this.user.email = val;
-      // console.log(this.numberOfSlides);
-    });
+    // await this.storage.get('user_id').then((val: string) => {
+    //   this.user.email = val;
+    //   // console.log(this.numberOfSlides);
+    // });
 
-    await this.storage.get('LOCATION').then((val: string) => {
-      this.user.city = val;
-    });
+    // await this.storage.get('LOCATION').then((val: string) => {
+    //   this.user.city = val;
+    // });
 
-    await this.storage.get('PREFERENCES').then((val) => {
-      this.user.preferences = val;
-      this.numberOfSlides = (Math.ceil(this.user.preferences.length / 5));
-    });
+    // await this.storage.get('PREFERENCES').then((val) => {
+    //   this.user.preferences = val;
+    //   this.numberOfSlides = (Math.ceil(this.user.preferences.length / 5));
+    // });
+  }
+
+  setUser(response) {
+    this.user.name = response.name;
+    this.user.city = response.city;
+    this.user.preferences = response.preferences;
   }
 
   async onChangeExit() {
