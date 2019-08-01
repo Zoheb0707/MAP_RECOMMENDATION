@@ -1,8 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { NavController } from '@ionic/angular';
 
 import { AuthService } from '../auth/auth.service';
+
+import * as firebase from 'firebase/app';
 
 @Component({
   selector: 'app-tab2',
@@ -11,9 +13,9 @@ import { AuthService } from '../auth/auth.service';
 })
 export class Tab2Page {
 
-  constructor(private  router: Router, private navCtrl: NavController) {}
-
   text = '';
+  
+  constructor(private  router: Router, private navCtrl: NavController, private auth: AuthService) {}
 
   onChangeAlert() {
     if (this.text === '') {
