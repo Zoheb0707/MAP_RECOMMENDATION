@@ -5,8 +5,8 @@ import { Observable, BehaviorSubject } from 'rxjs';
 
 import { Storage } from '@ionic/storage';
 import { User } from './user';
-import { AuthResponse } from './auth-response';
 
+import * as firebase from 'firebase/app';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { AngularFirestore } from 'angularfire2/firestore';
 import { AngularFireDatabase } from 'angularfire2/database';
@@ -50,9 +50,7 @@ export class AuthService {
         (res) => {
           if (res.user.emailVerified) {
             this.fStone.collection('users').doc(res.user.uid).valueChanges().subscribe((data: User) => {
-              this.loadUserInfo(res.user.uid, data).then(
-                () => resolve(res)
-              );
+              resolve(res)
             });
           } else {
             reject(res);
@@ -81,18 +79,34 @@ export class AuthService {
     return await this.storage.get('EMAIL');
   }
 
-  private async loadUserInfo(uid: string, user: User) {
+  loadUserInfo() {
     console.log('Store called');
-    await this.storage.set('ID', uid);
-    await this.storage.set('FIRST_NAME', user.name.first);
-    await this.storage.set('LAST_NAME', user.name.last);
-    await this.storage.set('LOCATION', user.city);
-    await this.storage.set('PREFERENCES', user.preferences);
+    const currentUser = this.fAuth.auth.currentUser;
+    this.storage.set('ID', currentUser.uid);
+    this.storage.set('FIRST_NAME', "Name");
+    this.storage.set('LAST_NAME', 'Surname');
+    this.storage.set('LOCATION', 'Seattle, WA');
+    this.storage.set('PREFERENCES', ['Pf1','Pf2']);
     console.log('Stored everything!');
   }
 
   verifyUser() {
     const currentUser = this.fAuth.auth.currentUser;
     currentUser.sendEmailVerification();
+  }
+
+  sendEmailVerification() {
+    const currentUser = firebase.auth().currentUser;
+    currentUser.sendEmailVerification();
+  }
+
+  // Try new things
+  loginUser(email: string, password: string): Promise<firebase.auth.UserCredential>{
+    return firebase.auth().signInWithEmailAndPassword(email, password);
+  }
+
+  // Get user
+  async getUser() {
+    return firebase.firestore().collection('users').doc(this.fAuth.auth.currentUser.uid).get();
   }
 }
