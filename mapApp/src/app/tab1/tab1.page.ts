@@ -193,4 +193,8 @@ export class Tab1Page implements OnInit {
       });
     });
   }
+
+  addVisit() {
+    this.userAuth.addVisit('newVisit');
+  }
 }

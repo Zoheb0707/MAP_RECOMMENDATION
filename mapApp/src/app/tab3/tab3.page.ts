@@ -39,7 +39,7 @@ export class Tab3Page implements OnInit {
 
   }
 
-  ngOnInit() {
+  ionViewWillEnter() {
     this.getUser();
   }
 
@@ -57,6 +57,7 @@ export class Tab3Page implements OnInit {
 
   async loadProfile() {
     this.user = this.userAuth.getUser();
+    console.log(this.user);
   }
 
   async onChangeExit() {

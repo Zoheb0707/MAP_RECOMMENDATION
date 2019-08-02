@@ -23,13 +23,13 @@ export class AuthUser {
     }
 
     async setUser(uid: string) {
-        await firebase.firestore().collection('users').doc(uid).get().then((res) => {
+        await firebase.firestore().collection('users').doc(uid).get().then(async (res) => {
             this.user.visitsTwo = res;
             this.user.uid = uid;
-            this.user.name = res.data().name;
-            this.user.city = res.data().city;
-            this.user.preferences = res.data().preferences;
-            this.user.visits = res.data().visits;
+            this.user.name = await res.data().name;
+            this.user.city = await res.data().city;
+            this.user.preferences = await res.data().preferences;
+            this.user.visits = await res.data().visits;
             this.wasUpdated = true;
             console.log('Loaded user profile');
         });
@@ -59,5 +59,32 @@ export class AuthUser {
 
     getUser() {
         return this.user;
+    }
+
+    addVisit(placeId: string) {
+        const date = new Date();
+        const visitName = this.user.uid + '_' + placeId + '_' + date.getTime();
+        firebase.firestore().collection('visits').doc(visitName).set({
+            uid: this.user.uid,
+            date: firebase.firestore.Timestamp.fromDate(date),
+            pid: placeId,
+            name: placeId
+        })
+        .then(() => {
+            this.user.visits.push(firebase.firestore().collection('visits').doc(visitName));
+            firebase.firestore().collection('users').doc(this.user.uid).update({
+                visits: this.user.visits
+            })
+            .then(() => {
+                console.log('added', visitName);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+
     }
 }
