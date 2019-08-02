@@ -33,10 +33,9 @@ export class AppComponent {
       this.splashScreen.hide();
       this.fAuth.authState.subscribe( (user) => {
         if (user) {
+          this.navCtrl.navigateRoot('/app/tabs/search');
           this.authUser.setUser(user.uid).then(() => {
             console.log('Logged In');
-            this.router.navigate(['/app/tabs/search']);
-            // this.navCtrl.navigateRoot('/app/tabs/search');
           });
         } else {
           console.log('Not Logged In');

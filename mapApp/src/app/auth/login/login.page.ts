@@ -41,7 +41,7 @@ export class LoginPage implements OnInit {
           // form.controls.password.reset();
           this.navCtrl.navigateForward('/app/tabs/search');
         });
-      } 
+      }
       // If user is not verified
       else {
         this.loadingMessage.dismiss().then(
