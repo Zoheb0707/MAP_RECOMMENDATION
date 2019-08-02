@@ -7,6 +7,8 @@ import { Events, LoadingController, ActionSheetController, AlertController  } fr
 import { Restaurant } from './restaurant';
 import { User } from '../auth/user';
 
+import { AuthUser } from '../providers/auth-user';
+
 
 @Component({
   selector: 'app-tab1',
@@ -22,11 +24,11 @@ export class Tab1Page implements OnInit {
   pastVisits: Restaurant[];
   pastVisitsTwo = [];
   debug = false;
-  sortingOption = undefined;
+  sortingOption = 'date';
 
   constructor(private router: Router, private http: HttpClient, private visitsService: VisitsService, private storage: Storage, 
               private loadingController: LoadingController, private alertController: AlertController,
-              private actionSheetController: ActionSheetController, private events: Events) { }
+              private actionSheetController: ActionSheetController, private events: Events, private userAuth: AuthUser) { }
 
   ngOnInit() {
     this.reloadVisits();
@@ -60,52 +62,30 @@ export class Tab1Page implements OnInit {
       await loading.present();
     }
 
-    this.storage.get('ID').then((uid: string) => {
-      this.visitsService.getVisits(uid).subscribe(
-        // If result is loaded
-        async (ans) => {
-          const refreshedPastVisits = [];
-
-          if (ans.data().visits !== undefined) {
-            for (const element of ans.data().visits) {
-              await element.get().then(async (res) => {
-                refreshedPastVisits.push(res.data());
-              });
-            }
-  
-            // Assign new visits
-            this.pastVisitsTwo = refreshedPastVisits;
-  
-            // Sort results
-            this.sortVisits(this.sortingOption);
-  
-            // If refresh
-            if (event !== undefined) {
-              event.target.complete();
-            } else {
-              this.loadingController.dismiss();
-            }
-          } else {
-            console.log('err');
-            if (event !== undefined) {
-              event.target.complete();
-            } else {
-              this.loadingController.dismiss();
-            }
-            this.presentServerError();
-          }
-        },
-        // If there was an error connecting to the server
-        (err) => {
-          console.log(err);
-          if (event !== undefined) {
-            event.target.complete();
-          } else {
-            this.loadingController.dismiss();
-          }
-          this.presentServerError();
+    // Update visits of authenticated user
+    this.userAuth.reloadVisits().then(async () => {
+      // If there was a change in visits
+      if (this.userAuth.isUpdated()) {
+        // TO-DO: not reload all of the visits, instead reload only new ones
+        // Reset the past visits array
+        const refreshedPastVisits = [];
+        for (const element of this.userAuth.getUser().visits) {
+          await element.get().then(async (res) => {
+            refreshedPastVisits.push(res.data());
+          });
         }
-      );
+        // Assign new visits
+        this.pastVisitsTwo = refreshedPastVisits;
+        // Sort results
+        this.sortVisits(this.sortingOption);
+      }
+
+      // If refresh
+      if (event !== undefined) {
+        event.target.complete();
+      } else {
+        this.loadingController.dismiss();
+      }
     });
   }
 
