@@ -39,7 +39,13 @@ export class AuthUser {
         await firebase.firestore().collection('users').doc(this.user.uid).get().then((res) => {
             if (!res.isEqual(this.user.visitsTwo)) {
                 this.user.visitsTwo = res;
-                this.user.visits = res.data().visits;
+                if (res.data().visits !== undefined) {
+                    this.user.visits = res.data().visits;
+                    console.log(this.user.visits);
+                } else {
+                    this.user.visits = [];
+                    console.log(this.user.visits);
+                }
                 this.wasUpdated = true;
                 console.log('Reloaded visits');
             } else {

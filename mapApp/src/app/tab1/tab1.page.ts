@@ -26,7 +26,7 @@ export class Tab1Page implements OnInit {
   debug = false;
   sortingOption = 'date';
 
-  constructor(private router: Router, private http: HttpClient, private visitsService: VisitsService, private storage: Storage, 
+  constructor(private router: Router, private http: HttpClient, private visitsService: VisitsService, private storage: Storage,
               private loadingController: LoadingController, private alertController: AlertController,
               private actionSheetController: ActionSheetController, private events: Events, private userAuth: AuthUser) { }
 
@@ -63,16 +63,20 @@ export class Tab1Page implements OnInit {
     }
 
     // Update visits of authenticated user
-    this.userAuth.reloadVisits().then(async () => {
+    this.userAuth.reloadVisits()
+    .then(async () => {
       // If there was a change in visits
       if (this.userAuth.isUpdated()) {
         // TO-DO: not reload all of the visits, instead reload only new ones
         // Reset the past visits array
         const refreshedPastVisits = [];
-        for (const element of this.userAuth.getUser().visits) {
-          await element.get().then(async (res) => {
-            refreshedPastVisits.push(res.data());
-          });
+        // Security measure to ensure that user.visits is not undefined
+        if (this.userAuth.getUser().visits !== undefined) {
+          for (const element of this.userAuth.getUser().visits) {
+            await element.get().then(async (res) => {
+              refreshedPastVisits.push(res.data());
+            });
+          }
         }
         // Assign new visits
         this.pastVisitsTwo = refreshedPastVisits;
@@ -86,6 +90,9 @@ export class Tab1Page implements OnInit {
       } else {
         this.loadingController.dismiss();
       }
+    })
+    .catch((error) => {
+      console.log(error);
     });
   }
 

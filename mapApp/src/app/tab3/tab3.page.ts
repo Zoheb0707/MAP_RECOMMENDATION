@@ -16,7 +16,7 @@ import { User } from '../providers/user';
   styleUrls: ['tab3.page.scss']
 })
 
-export class Tab3Page {
+export class Tab3Page implements OnInit {
 
   name: string;
   numberOfSlides = 1;
@@ -39,7 +39,7 @@ export class Tab3Page {
 
   }
 
-  ionViewWillEnter() {
+  ngOnInit() {
     this.getUser();
   }
 
@@ -57,7 +57,6 @@ export class Tab3Page {
 
   async loadProfile() {
     this.user = this.userAuth.getUser();
-    console.log(this.user);
   }
 
   async onChangeExit() {
