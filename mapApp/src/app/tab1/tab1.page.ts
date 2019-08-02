@@ -195,6 +195,48 @@ export class Tab1Page implements OnInit {
   }
 
   addVisit() {
-    this.userAuth.addVisit('newVisit');
+    this.presentNameForNewPlace().then((res) => {
+      if (res.data.name !== undefined) {
+        this.userAuth.addVisit(res.data.name).then(() => {
+          this.reloadVisits();
+        });
+      }
+    });
+  }
+
+  async presentNameForNewPlace() {
+    let choice: any;
+    const alert = await this.alertController.create({
+      header: 'What is the name of the place?',
+      inputs: [
+        {
+          name: 'name',
+          placeholder: 'Name'
+        }
+      ],
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          handler: data => {
+            console.log('Cancel clicked');
+          }
+        },
+        {
+          text: 'Add',
+          handler: data => {
+            return data;
+          }
+        }
+      ]
+    });
+
+    await alert.present();
+
+    await alert.onDidDismiss().then(data => {
+      choice = data;
+    });
+
+    return choice;
   }
 }

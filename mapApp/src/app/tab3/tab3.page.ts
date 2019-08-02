@@ -16,7 +16,7 @@ import { User } from '../providers/user';
   styleUrls: ['tab3.page.scss']
 })
 
-export class Tab3Page implements OnInit {
+export class Tab3Page {
 
   name: string;
   numberOfSlides = 1;

@@ -61,22 +61,26 @@ export class AuthUser {
         return this.user;
     }
 
-    addVisit(placeId: string) {
+    async addVisit(placeId: string) {
         const date = new Date();
         const visitName = this.user.uid + '_' + placeId + '_' + date.getTime();
-        firebase.firestore().collection('visits').doc(visitName).set({
+        // +1 db call
+        await firebase.firestore().collection('visits').doc(visitName).set({
             uid: this.user.uid,
             date: firebase.firestore.Timestamp.fromDate(date),
             pid: placeId,
             name: placeId
         })
-        .then(() => {
-            this.user.visits.push(firebase.firestore().collection('visits').doc(visitName));
-            firebase.firestore().collection('users').doc(this.user.uid).update({
+        .then(async () => {
+            // +2 db call
+            await this.user.visits.push(firebase.firestore().collection('visits').doc(visitName));
+            // +3 db call
+            await firebase.firestore().collection('users').doc(this.user.uid).update({
                 visits: this.user.visits
             })
             .then(() => {
                 console.log('added', visitName);
+                this.wasUpdated = true;
             })
             .catch((err) => {
                 console.log(err);
