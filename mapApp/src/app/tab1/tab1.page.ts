@@ -8,6 +8,7 @@ import { Restaurant } from './restaurant';
 import { User } from '../auth/user';
 
 import { AuthUser } from '../providers/auth-user';
+import { Visit } from '../providers/visit-interface';
 
 
 @Component({
@@ -22,8 +23,11 @@ export class Tab1Page implements OnInit {
    * Stores a list of previously visited restaurants
    */
   pastVisits: Restaurant[];
-  pastVisitsTwo = [];
+  // Currently rendering this
+  pastVisitsTwo: Visit[];
+  // debug of new features
   debug = false;
+  // sorting option
   sortingOption = 'date';
 
   constructor(private router: Router, private http: HttpClient, private visitsService: VisitsService, private storage: Storage,
@@ -62,38 +66,23 @@ export class Tab1Page implements OnInit {
       await loading.present();
     }
 
-    // Update visits of authenticated user
-    this.userAuth.reloadVisits()
-    .then(async () => {
-      // If there was a change in visits
-      if (this.userAuth.isUpdated()) {
-        // TO-DO: not reload all of the visits, instead reload only new ones
-        // Reset the past visits array
-        const refreshedPastVisits = [];
-        // Security measure to ensure that user.visits is not undefined
-        if (this.userAuth.getUser().visits !== undefined) {
-          for (const element of this.userAuth.getUser().visits) {
-            await element.get().then(async (res) => {
-              refreshedPastVisits.push(res.data());
-            });
-          }
-        }
-        // Assign new visits
-        this.pastVisitsTwo = refreshedPastVisits;
-        // Sort results
-        this.sortVisits(this.sortingOption);
-      }
-
-      // If refresh
-      if (event !== undefined) {
-        event.target.complete();
-      } else {
-        this.loadingController.dismiss();
-      }
+    await this.userAuth.reloadVisits()
+    .then( () => {
+      // Get updated visits
+      this.pastVisitsTwo = this.userAuth.getUser().visitsThree;
+      // Sort results
+      this.sortVisits(this.sortingOption);
     })
-    .catch((error) => {
+    .catch( (error) => {
       console.log(error);
     });
+
+    // If refresh
+    if (event !== undefined) {
+      event.target.complete();
+    } else {
+      this.loadingController.dismiss();
+    }
   }
 
   showRestaurants() {

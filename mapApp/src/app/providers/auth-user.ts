@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import { Visit } from './visit';
+import { VisitObject } from './visit-object';
 import { User } from './user';
 import * as firebase from 'firebase/app';
 import { AngularFireAuth } from 'angularfire2/auth';
@@ -9,6 +9,10 @@ export class AuthUser {
 
     private user: User;
     private wasUpdated: boolean;
+    // Document references to all rendered visits
+    private renderedReferences: firebase.firestore.DocumentReference[];
+    // Stores a snapshot of a user document for future comparissons
+    private documentSnapshot: firebase.firestore.DocumentSnapshot;
 
     constructor() {
         this.user = {
@@ -17,9 +21,12 @@ export class AuthUser {
             city: '',
             preferences: [],
             visits: [],
-            visitsTwo: undefined
+            visitsTwo: undefined,
+            visitsThree: []
         };
+        this.renderedReferences = [];
         this.wasUpdated = false;
+        this.documentSnapshot = undefined;
     }
 
     async setUser(uid: string) {
@@ -29,28 +36,63 @@ export class AuthUser {
             this.user.name = await res.data().name;
             this.user.city = await res.data().city;
             this.user.preferences = await res.data().preferences;
-            this.user.visits = await res.data().visits;
+            await this.reloadVisits();
             this.wasUpdated = true;
             console.log('Loaded user profile');
         });
     }
 
+    // Reloads visits
     async reloadVisits() {
-        await firebase.firestore().collection('users').doc(this.user.uid).get().then((res) => {
-            if (!res.isEqual(this.user.visitsTwo)) {
-                this.user.visitsTwo = res;
-                if (res.data().visits !== undefined) {
-                    this.user.visits = res.data().visits;
-                    console.log(this.user.visits);
-                } else {
-                    this.user.visits = [];
-                    console.log(this.user.visits);
-                }
-                this.wasUpdated = true;
-                console.log('Reloaded visits');
+
+        await firebase.firestore().collection('users').doc(this.user.uid).get()
+        .then(async (response) => {
+            if (this.documentSnapshot === undefined || !response.isEqual(this.documentSnapshot)) {
+                // Save document snapshot
+                this.documentSnapshot = response;
+                // Load new visits
+                const newVisits = await response.get('visits');
+                console.log('newVisits', newVisits);
+                console.log('rendered', this.renderedReferences);
+
+                // Find if there are any new elements
+                const elementsToAdd = this.findDifferences(newVisits, this.renderedReferences);
+
+                // Find if there are any elements to delete
+                const elementsToRemove = this.findDifferences(this.renderedReferences, newVisits);
+
+                console.log('toAdd', elementsToAdd);
+                console.log('toRemove', elementsToRemove);
+
+                // Add new elements
+                await this.addNewVisits(elementsToAdd);
+                console.log('Added new items');
+                // Remove elements
             } else {
-                // Do nothing
+                // Nothing changed - do nothing
+                console.log('Nothing to add');
             }
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+    }
+
+    async addNewVisits(elementsToAdd: firebase.firestore.DocumentReference[]) {
+        for (const visitReference of elementsToAdd) {
+            const visitObject = new VisitObject();
+            await visitObject.setVisit(visitReference);
+            this.renderedReferences.push(visitReference);
+            this.user.visitsThree.push(visitObject);
+        }
+    }
+
+    // Return differences between two DocumentReference arrays.
+    private findDifferences(arrayOne: firebase.firestore.DocumentReference[], arrayTwo: firebase.firestore.DocumentReference[])  {
+        return arrayOne.filter( (objectOne) => {
+            return !arrayTwo.some( (objectTwo) => {
+                return objectOne.isEqual(objectTwo);
+            });
         });
     }
 
