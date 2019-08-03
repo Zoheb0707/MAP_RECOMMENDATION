@@ -66,11 +66,13 @@ export class Tab1Page implements OnInit {
     }
 
     await this.userAuth.reloadVisits()
-    .then( () => {
+    .then(async () => {
       // Get updated visits
-      this.pastVisitsTwo = this.userAuth.getUser().visitsThree;
+      const updatedVisits = this.userAuth.getUser().visits;
       // Sort results
-      this.sortVisits(this.sortingOption);
+      await this.sortVisits(this.sortingOption, updatedVisits);
+      // Store them
+      this.pastVisitsTwo = updatedVisits;
     })
     .catch( (error) => {
       console.log(error);
@@ -101,27 +103,27 @@ export class Tab1Page implements OnInit {
    * Sorts stored past visits in a manner specified by a passed parameter
    * @param option type of sorting
    */
-  sortVisits(option: string) {
+  async sortVisits(option: string, visitsArray: Visit[]) {
     switch (option) {
       case 'alphabetic': {
-        this.pastVisitsTwo.sort((r1, r2) => r1.name.localeCompare(r2.name));
+        await visitsArray.sort((r1, r2) => r1.name.localeCompare(r2.name));
         break;
       }
 
       case 'date': {
-        this.pastVisitsTwo.sort((r1, r2) => +r1.date.seconds > +r2.date.seconds ? -1 : +r1.date.seconds < +r2.date.seconds ? 1 : 0);
+        await visitsArray.sort((r1, r2) => +r1.date.seconds > +r2.date.seconds ? -1 : +r1.date.seconds < +r2.date.seconds ? 1 : 0);
         break;
       }
 
-      case 'times': {
-        this.pastVisits.sort((r1, r2) => +r1.times > +r2.times ? -1 : +r1.times < +r2.times ? 1 : 0);
-        break;
-      }
+      // case 'times': {
+      //   await visitsArray.sort((r1, r2) => +r1.times > +r2.times ? -1 : +r1.times < +r2.times ? 1 : 0);
+      //   break;
+      // }
 
-      case 'rating': {
-        this.pastVisits.sort((r1, r2) => +r1.avg_rating > +r2.avg_rating ? -1 : +r1.avg_rating < +r2.avg_rating ? 1 : 0);
-        break;
-      }
+      // case 'rating': {
+      //   await visitsArray.sort((r1, r2) => +r1.avg_rating > +r2.avg_rating ? -1 : +r1.avg_rating < +r2.avg_rating ? 1 : 0);
+      //   break;
+      // }
     }
   }
 
@@ -135,9 +137,9 @@ export class Tab1Page implements OnInit {
         text: 'Name',
         handler: () => {
           this.sortingOption = 'alphabetic';
-          this.sortVisits(this.sortingOption);
+          this.sortVisits(this.sortingOption, this.pastVisitsTwo);
         }
-      }, 
+      },
       // {
       //   text: 'Times',
       //   handler: () => {
@@ -149,9 +151,9 @@ export class Tab1Page implements OnInit {
         text: 'Date',
         handler: () => {
           this.sortingOption = 'date';
-          this.sortVisits(this.sortingOption);
+          this.sortVisits(this.sortingOption, this.pastVisitsTwo);
         }
-      }, 
+      },
       // {
       //   text: 'Rating',
       //   handler: () => {
@@ -170,11 +172,15 @@ export class Tab1Page implements OnInit {
   }
 
   // Adds a new visit
-  addVisit() {
-    this.presentNameForNewPlace().then((res) => {
+  async addVisit() {
+    this.presentNameForNewPlace().then(async (res) => {
       if (res.data.name !== undefined) {
-        this.userAuth.addVisit(res.data.name).then(() => {
-          this.reloadVisits();
+        await this.userAuth.addVisit(res.data.name).then(async () => {
+          const updatedVisits = this.userAuth.getUser().visits;
+          // Sort results
+          await this.sortVisits(this.sortingOption, updatedVisits);
+          // Store them
+          this.pastVisitsTwo = updatedVisits;
         });
       }
     });

@@ -18,9 +18,7 @@ export class AuthUser {
             name: {first: '', last: ''},
             city: '',
             preferences: [],
-            visits: [],
-            visitsTwo: undefined,
-            visitsThree: []
+            visits: []
         };
         this.renderedReferences = [];
         this.documentSnapshot = undefined;
@@ -29,7 +27,6 @@ export class AuthUser {
     // Set-up a new authorized user instance
     async setUser(uid: string) {
         await firebase.firestore().collection('users').doc(uid).get().then(async (res) => {
-            this.user.visitsTwo = res;
             this.user.uid = uid;
             this.user.name = await res.data().name;
             this.user.city = await res.data().city;
@@ -47,10 +44,9 @@ export class AuthUser {
             if (this.documentSnapshot === undefined || !response.isEqual(this.documentSnapshot)) {
                 // Save document snapshot
                 this.documentSnapshot = response;
+
                 // Load new visits
                 const newVisits = await response.get('visits');
-                console.log('newVisits', newVisits);
-                console.log('rendered', this.renderedReferences);
 
                 // Find if there are any new elements
                 const elementsToAdd = this.findDifferences(newVisits, this.renderedReferences);
@@ -58,15 +54,16 @@ export class AuthUser {
                 // Find if there are any elements to delete
                 const elementsToRemove = this.findDifferences(this.renderedReferences, newVisits);
 
-                console.log('toAdd', elementsToAdd);
-                console.log('toRemove', elementsToRemove);
-
                 // Add new elements
-                await this.addNewVisits(elementsToAdd);
-                console.log('Added new items');
+                if (elementsToAdd.length !== 0) {
+                    await this.addNewVisits(elementsToAdd);
+                    console.log('Added new items');
+                }
                 // Remove elements
-                await this.removeVisits(elementsToRemove);
-                console.log('Removed items');
+                if (elementsToRemove.length !== 0) {
+                    await this.removeVisits(elementsToRemove);
+                    console.log('Removed items');
+                }
             } else {
                 // Nothing changed - do nothing
                 console.log('Nothing to add');
@@ -82,8 +79,8 @@ export class AuthUser {
         for (const visitReference of elementsToAdd) {
             const visitObject = new VisitObject();
             await visitObject.setVisit(visitReference);
-            this.renderedReferences.push(visitReference);
-            this.user.visitsThree.push(visitObject);
+            this.renderedReferences.unshift(visitReference);
+            this.user.visits.unshift(visitObject);
         }
     }
 
@@ -94,7 +91,7 @@ export class AuthUser {
                 return !element.isEqual(visitReference);
             });
 
-            this.user.visitsThree = await this.user.visitsThree.filter( (element) => {
+            this.user.visits = await this.user.visits.filter( (element) => {
                 return element.id !== visitReference.id;
             });
         }
@@ -126,14 +123,14 @@ export class AuthUser {
         })
         .then(async () => {
             const visitReference: firebase.firestore.DocumentReference = await firebase.firestore().collection('visits').doc(visitName);
-            this.renderedReferences.push(visitReference);
+            this.renderedReferences.unshift(visitReference);
             const newVisitObject = new VisitObject();
             await newVisitObject.setVisit(visitReference);
-            this.user.visitsThree.push(newVisitObject);
             await firebase.firestore().collection('users').doc(this.user.uid).update({
                 visits: this.renderedReferences
             })
             .then(() => {
+                this.user.visits.unshift(newVisitObject);
                 console.log('added', visitName);
             })
             .catch((error) => {

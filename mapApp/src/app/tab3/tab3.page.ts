@@ -8,6 +8,7 @@ import { AuthService } from '../auth/auth.service';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { AuthUser } from '../providers/auth-user';
 import { User } from '../providers/user';
+import { VisitObject } from '../providers/visit-object';
 
 
 @Component({
@@ -29,8 +30,7 @@ export class Tab3Page implements OnInit {
                 },
                 city: '',
                 preferences: [],
-                visits: [],
-                visitsTwo: undefined
+                visits: []
   };
 
   constructor(private  authService: AuthService, private navCtrl: NavController,
