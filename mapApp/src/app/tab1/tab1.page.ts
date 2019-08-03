@@ -5,7 +5,6 @@ import { Storage } from '@ionic/storage';
 import { VisitsService } from '../services/visits.service';
 import { Events, LoadingController, ActionSheetController, AlertController  } from '@ionic/angular';
 import { Restaurant } from './restaurant';
-import { User } from '../auth/user';
 
 import { AuthUser } from '../providers/auth-user';
 import { Visit } from '../providers/visit-interface';
@@ -83,13 +82,6 @@ export class Tab1Page implements OnInit {
     } else {
       this.loadingController.dismiss();
     }
-  }
-
-  showRestaurants() {
-    let name = Math.floor(Math.random() * Math.floor(100));
-    // this.pastVisits.push({restaurant_id: name});
-    this.visitsService.appendData({restaurant_id: name, times: 1}).subscribe((answ) => {
-    });
   }
 
   /**
@@ -177,19 +169,7 @@ export class Tab1Page implements OnInit {
     await actionSheet.present();
   }
 
-  async getVisits() {
-    this.storage.get('ID').then(async (uid: string) => {
-      this.visitsService.getVisits(uid).subscribe(async (res: User) => {
-        this.pastVisitsTwo = await Promise.all(res.visits.map(async (val) => {
-          await val.get().then(async (dat) => {
-            console.log(dat.data());
-            return await dat.data();
-          });
-        }));
-      });
-    });
-  }
-
+  // Adds a new visit
   addVisit() {
     this.presentNameForNewPlace().then((res) => {
       if (res.data.name !== undefined) {
@@ -200,6 +180,7 @@ export class Tab1Page implements OnInit {
     });
   }
 
+  // Presents a pop-up window with question to type a name of the place
   async presentNameForNewPlace() {
     let choice: any;
     const alert = await this.alertController.create({

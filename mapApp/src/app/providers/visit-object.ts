@@ -8,6 +8,8 @@ export class VisitObject implements Visit {
     pid: string;
     date: firebase.firestore.Timestamp;
 
+    id: string;
+
     private document: firebase.firestore.DocumentData;
 
     constructor() {
@@ -16,6 +18,7 @@ export class VisitObject implements Visit {
         this.pid = '';
         this.date = undefined;
 
+        this.id = '';
         this.document = undefined;
     }
 
@@ -27,6 +30,7 @@ export class VisitObject implements Visit {
             this.name = this.document.name;
             this.pid = this.document.pid;
             this.date = this.document.date;
+            this.id = response.id;
         })
         .catch( (error) => {
             console.log(error);

@@ -2,13 +2,11 @@ import {Injectable} from '@angular/core';
 import { VisitObject } from './visit-object';
 import { User } from './user';
 import * as firebase from 'firebase/app';
-import { AngularFireAuth } from 'angularfire2/auth';
 
 @Injectable()
 export class AuthUser {
 
     private user: User;
-    private wasUpdated: boolean;
     // Document references to all rendered visits
     private renderedReferences: firebase.firestore.DocumentReference[];
     // Stores a snapshot of a user document for future comparissons
@@ -25,10 +23,10 @@ export class AuthUser {
             visitsThree: []
         };
         this.renderedReferences = [];
-        this.wasUpdated = false;
         this.documentSnapshot = undefined;
     }
 
+    // Set-up a new authorized user instance
     async setUser(uid: string) {
         await firebase.firestore().collection('users').doc(uid).get().then(async (res) => {
             this.user.visitsTwo = res;
@@ -37,7 +35,6 @@ export class AuthUser {
             this.user.city = await res.data().city;
             this.user.preferences = await res.data().preferences;
             await this.reloadVisits();
-            this.wasUpdated = true;
             console.log('Loaded user profile');
         });
     }
@@ -68,6 +65,8 @@ export class AuthUser {
                 await this.addNewVisits(elementsToAdd);
                 console.log('Added new items');
                 // Remove elements
+                await this.removeVisits(elementsToRemove);
+                console.log('Removed items');
             } else {
                 // Nothing changed - do nothing
                 console.log('Nothing to add');
@@ -78,12 +77,26 @@ export class AuthUser {
         });
     }
 
+    // Adds all visits passed in the list
     async addNewVisits(elementsToAdd: firebase.firestore.DocumentReference[]) {
         for (const visitReference of elementsToAdd) {
             const visitObject = new VisitObject();
             await visitObject.setVisit(visitReference);
             this.renderedReferences.push(visitReference);
             this.user.visitsThree.push(visitObject);
+        }
+    }
+
+    // Removes all visits passed in the list
+    async removeVisits(elementsToRemove: firebase.firestore.DocumentReference[]) {
+        for (const visitReference of elementsToRemove) {
+            this.renderedReferences = await this.renderedReferences.filter( (element) => {
+                return !element.isEqual(visitReference);
+            });
+
+            this.user.visitsThree = await this.user.visitsThree.filter( (element) => {
+                return element.id !== visitReference.id;
+            });
         }
     }
 
@@ -96,23 +109,15 @@ export class AuthUser {
         });
     }
 
-    isUpdated() {
-        if (this.wasUpdated) {
-            this.wasUpdated = false;
-            return true;
-        } else {
-            return false;
-        }
-    }
-
     getUser() {
         return this.user;
     }
 
+    // Adds a new visit to the db
     async addVisit(placeId: string) {
         const date = new Date();
         const visitName = this.user.uid + '_' + placeId + '_' + date.getTime();
-        // +1 db call
+
         await firebase.firestore().collection('visits').doc(visitName).set({
             uid: this.user.uid,
             date: firebase.firestore.Timestamp.fromDate(date),
@@ -120,23 +125,23 @@ export class AuthUser {
             name: placeId
         })
         .then(async () => {
-            // +2 db call
-            await this.user.visits.push(firebase.firestore().collection('visits').doc(visitName));
-            // +3 db call
+            const visitReference: firebase.firestore.DocumentReference = await firebase.firestore().collection('visits').doc(visitName);
+            this.renderedReferences.push(visitReference);
+            const newVisitObject = new VisitObject();
+            await newVisitObject.setVisit(visitReference);
+            this.user.visitsThree.push(newVisitObject);
             await firebase.firestore().collection('users').doc(this.user.uid).update({
-                visits: this.user.visits
+                visits: this.renderedReferences
             })
             .then(() => {
                 console.log('added', visitName);
-                this.wasUpdated = true;
             })
-            .catch((err) => {
-                console.log(err);
+            .catch((error) => {
+                console.log(error);
             });
         })
-        .catch((err) => {
-            console.log(err);
+        .catch((error) => {
+            console.log(error);
         });
-
     }
 }
