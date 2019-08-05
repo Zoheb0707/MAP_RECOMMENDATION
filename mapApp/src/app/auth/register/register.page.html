@@ -1,68 +1,100 @@
-<ion-content  color="primary">
-    <form #form="ngForm" [formGroup]="registerForm" (ngSubmit)="register(form)">
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Create your account</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <b>Create your account</b> <br />
+        or sing in with exising one.
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <ion-slides [options]="slideOpts">
+    <ion-slide>
       <ion-grid>
-        <ion-row color="primary" justify-content-center>
-          <ion-col align-self-center size-md="6" size-lg="5" size-xs="12">
-            <div text-center>
-              <h3>Create your account!</h3>
-            </div>
-            <div padding>
-
-              <ion-item>
-                <ion-label position="floating">First Name</ion-label>
-                <ion-input formControlName="first_name" type="text" [class.invalid]="!registerForm.controls.first_name.valid"></ion-input>
-              </ion-item>
-
-              <ion-item *ngIf="registerForm.get('first_name').hasError('pattern')">
-                <p>Please enter a valid first name.</p>
-              </ion-item>
-
-              <ion-item>
-                <ion-label position="floating">Last Name</ion-label>
-                <ion-input formControlName="last_name" type="text" [class.invalid]="!registerForm.controls.last_name.valid"></ion-input>
-              </ion-item>
-
-              <ion-item *ngIf="registerForm.get('last_name').hasError('pattern')">
-                <p>Please enter a valid last name.</p>
-              </ion-item>
-
-              <ion-item>
-                <ion-label position="floating">E-mail</ion-label>
-                <ion-input formControlName="email" type="email" [class.invalid]="!registerForm.controls.email.valid"></ion-input>
-              </ion-item>
-
-              <ion-item *ngIf="registerForm.get('email').hasError('email')">
-                <p>Please enter a valid e-mail.</p>
-              </ion-item>
-
-              <ion-item>
-                <ion-label position="floating">Password</ion-label>
-                <ion-input formControlName="password" type="password" [class.invalid]="!registerForm.controls.password.valid"></ion-input>
-              </ion-item>
-
-              <ion-item *ngIf="registerForm.get('password').hasError('pattern')">
-                <p> Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters.</p>
-              </ion-item>
-
-              <ion-item>
-                <ion-label position="floating">Password again</ion-label>
-                <ion-input formControlName="confirm" type="password" [class.invalid]="!registerForm.controls.confirm.valid"></ion-input>
-              </ion-item>
-
-              <ion-item *ngIf="registerForm.get('confirm').hasError('equalTo')">
-                  <p>Password Mismatch.</p>
-              </ion-item>
-            </div>
-            <div padding>
-              <ion-button  size="large" type="submit" [disabled]="form.invalid" expand="block">Register</ion-button>
-            </div>
-
-            <div padding>
-              <ion-button  size="large" type="button" expand="block" color="danger" (click)="back()">Back</ion-button>
-            </div>
+        <ion-row>
+          <ion-col>
+            <ion-item>
+              <ion-label position="stacked">First Name</ion-label>
+              <ion-input required type="text"></ion-input>
+            </ion-item>
           </ion-col>
         </ion-row>
       </ion-grid>
-    </form>
-  </ion-content>
-  
+    </ion-slide>
+
+    <ion-slide>
+      <ion-grid>
+        <ion-row>
+          <ion-col>
+            <ion-item>
+              <ion-label position="stacked">Last Name</ion-label>
+              <ion-input required type="text"></ion-input>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-slide>
+
+    <ion-slide>
+      <ion-grid>
+        <ion-row>
+          <ion-col>
+            <ion-item>
+              <ion-label position="stacked">Date of Birth</ion-label>
+              <ion-datetime value="1990-02-19"></ion-datetime>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-slide>
+
+    <ion-slide>
+      <ion-grid>
+        <ion-row>
+          <ion-col>
+            <ion-item>
+              <ion-label position="stacked">Email</ion-label>
+              <ion-input required type="text"></ion-input>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-slide>
+
+    <ion-slide>
+      <ion-grid>
+        <ion-row>
+          <ion-col>
+            <ion-item>
+              <ion-label position="stacked">Password</ion-label>
+              <ion-input required type="text"></ion-input>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-slide>
+  </ion-slides>
+
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <ion-button expand="block" *ngIf="showButton" (click)="slideForward()">
+          Next
+        </ion-button>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-button expand="block" *ngIf="showBackButton" (click)="slideBack()">
+          Back
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

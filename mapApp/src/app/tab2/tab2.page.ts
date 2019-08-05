@@ -14,14 +14,13 @@ import * as firebase from 'firebase/app';
 export class Tab2Page {
 
   text = '';
-  
+
   constructor(private  router: Router, private navCtrl: NavController, private auth: AuthService) {}
 
   onChangeAlert() {
     if (this.text === '') {
       this.text = 'random';
     }
-    // alert('Sending request with key: ' + this.text);
     this.text = '';
     this.navCtrl.navigateForward('searches');
   }
