@@ -1,27 +1,30 @@
-<ion-header>
+<ion-header no-border>
   <ion-toolbar>
     <ion-title>Create your account</ion-title>
+    <ion-buttons slot="secondary">
+        <ion-button *ngIf="showBackButton" (click)="slideBack()">
+            <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
+        </ion-button>
+      </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <ion-grid>
-    <ion-row>
-      <ion-col>
-        <b>Create your account</b> <br />
-        or sing in with exising one.
-      </ion-col>
-    </ion-row>
-  </ion-grid>
-
   <ion-slides [options]="slideOpts">
     <ion-slide>
       <ion-grid>
         <ion-row>
           <ion-col>
-            <ion-item>
-              <ion-label position="stacked">First Name</ion-label>
-              <ion-input required type="text"></ion-input>
+            <ion-item lines="none" class="ion-no-margin">
+              <ion-text>Let's get you set up.</ion-text>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <ion-item lines="none">
+              <ion-label position="stacked">Enter your email</ion-label>
+              <ion-input required type="text" maxlength="4" placeholder="your@email.here"></ion-input>
             </ion-item>
           </ion-col>
         </ion-row>
@@ -30,6 +33,13 @@
 
     <ion-slide>
       <ion-grid>
+          <ion-row>
+              <ion-col>
+                <ion-item lines="none" class="ion-padding-top">
+                  <ion-text>Just a test 1</ion-text>
+                </ion-item>
+              </ion-col>
+            </ion-row>
         <ion-row>
           <ion-col>
             <ion-item>
@@ -43,19 +53,34 @@
 
     <ion-slide>
       <ion-grid>
+          <ion-row>
+              <ion-col>
+                <ion-item lines="none">
+                  <ion-text>Just a test 2</ion-text>
+                </ion-item>
+              </ion-col>
+            </ion-row>
         <ion-row>
           <ion-col>
             <ion-item>
               <ion-label position="stacked">Date of Birth</ion-label>
-              <ion-datetime value="1990-02-19"></ion-datetime>
+              <ion-datetime displayFormat="MMMM DD YYYY" readonly=true></ion-datetime>
             </ion-item>
           </ion-col>
         </ion-row>
       </ion-grid>
+      <ion-button (click)="showPicker()">Show picker</ion-button>
     </ion-slide>
 
     <ion-slide>
       <ion-grid>
+          <ion-row>
+              <ion-col>
+                <ion-item lines="none">
+                  <ion-text>Just a test 3</ion-text>
+                </ion-item>
+              </ion-col>
+            </ion-row>
         <ion-row>
           <ion-col>
             <ion-item>
@@ -84,15 +109,8 @@
   <ion-grid>
     <ion-row>
       <ion-col>
-        <ion-button expand="block" *ngIf="showButton" (click)="slideForward()">
+        <ion-button expand="block" *ngIf="showButton" (click)="slideForward()" class="ion-padding">
           Next
-        </ion-button>
-      </ion-col>
-    </ion-row>
-    <ion-row>
-      <ion-col>
-        <ion-button expand="block" *ngIf="showBackButton" (click)="slideBack()">
-          Back
         </ion-button>
       </ion-col>
     </ion-row>

@@ -1,10 +1,13 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
 import { AuthService } from '../auth.service';
-import { NavController, IonSlides } from '@ionic/angular';
+import { NavController, IonSlides, PickerController, IonDatetime  } from '@ionic/angular';
 import { FormBuilder, FormGroup, Validators, FormControl, NgForm, ValidatorFn, AbstractControl } from '@angular/forms';
 import { User } from '../user';
+import { PickerOptions } from '@ionic/core';
 
 import { AngularFireAuth } from "angularfire2/auth";
+
+import { Keyboard } from '@ionic-native/keyboard/ngx';
 
 @Component({
   selector: 'app-register',
@@ -13,14 +16,17 @@ import { AngularFireAuth } from "angularfire2/auth";
 })
 export class RegisterPage implements OnInit {
   @ViewChild(IonSlides) slides: IonSlides;
+  @ViewChild(IonDatetime) dateTime: IonDatetime;
 
   slideOpts = {
     initialSlide: 0,
     slidesPerView: 1,
     centeredSlides: true,
     allowTouchMove: false,
-    speed: 400
+    speed: 200
   };
+
+  framework: string;
 
   public registerForms: FormGroup[] = [];
 
@@ -58,8 +64,7 @@ export class RegisterPage implements OnInit {
   user: User;
 
   constructor(private authService: AuthService, private navCtrl: NavController, private formBuilder: FormBuilder,
-              private fAuth: AngularFireAuth) { }
-
+              private fAuth: AngularFireAuth, private pickerCtrl: PickerController, private keyboard: Keyboard) { }
   ngOnInit() {
     this.registerForms.unshift(this.formBuilder.group({
       firstName: [''],
@@ -112,6 +117,8 @@ export class RegisterPage implements OnInit {
         this.showBackButton = true;
       }
     });
+
+    this.keyboard.show();
   }
 
   slideBack() {
@@ -123,6 +130,13 @@ export class RegisterPage implements OnInit {
         this.showButton = true;
       }
     });
+  }
+
+  async showPicker() {
+    const date = new Date();
+    date.setFullYear(date.getFullYear() - 12);
+    this.dateTime.max = date.toISOString();
+    this.dateTime.open();
   }
 
 }
