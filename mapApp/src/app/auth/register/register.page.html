@@ -24,7 +24,7 @@
           <ion-col>
             <ion-item lines="none">
               <ion-label position="stacked">Enter your email</ion-label>
-              <ion-input required type="text" maxlength="4" placeholder="your@email.here"></ion-input>
+              <ion-input #inputOne (ionBlur)="blurEvent($event)" (ionFocus)="focusEvent($event)" autofocus="true" clearInput="true" required type="text" placeholder="your@email.here"></ion-input>
             </ion-item>
           </ion-col>
         </ion-row>
@@ -44,7 +44,7 @@
           <ion-col>
             <ion-item>
               <ion-label position="stacked">Last Name</ion-label>
-              <ion-input required type="text"></ion-input>
+              <ion-input #inputTwo (ionBlur)="blurEvent($event)" (ionFocus)="focusEvent($event)" required type="text"></ion-input>
             </ion-item>
           </ion-col>
         </ion-row>
@@ -109,7 +109,7 @@
   <ion-grid>
     <ion-row>
       <ion-col>
-        <ion-button expand="block" *ngIf="showButton" (click)="slideForward()" class="ion-padding">
+        <ion-button expand="block" *ngIf="showButton" (click)="slideForwardTwo()" class="ion-padding">
           Next
         </ion-button>
       </ion-col>

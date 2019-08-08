@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit } from '@angular/core';
+import { Component, ViewChild, OnInit, ElementRef } from '@angular/core';
 import { AuthService } from '../auth.service';
 import { NavController, IonSlides, PickerController, IonDatetime  } from '@ionic/angular';
 import { FormBuilder, FormGroup, Validators, FormControl, NgForm, ValidatorFn, AbstractControl } from '@angular/forms';
@@ -6,7 +6,6 @@ import { User } from '../user';
 import { PickerOptions } from '@ionic/core';
 
 import { AngularFireAuth } from "angularfire2/auth";
-
 import { Keyboard } from '@ionic-native/keyboard/ngx';
 
 @Component({
@@ -15,18 +14,22 @@ import { Keyboard } from '@ionic-native/keyboard/ngx';
   styleUrls: ['./register.page.scss'],
 })
 export class RegisterPage implements OnInit {
-  @ViewChild(IonSlides) slides: IonSlides;
+  @ViewChild(IonSlides) slides;
   @ViewChild(IonDatetime) dateTime: IonDatetime;
+  @ViewChild('inputOne') inputOne;
+  @ViewChild('inputTwo') inputTwo;
+  @ViewChild('inputThree') inputThree;
 
   slideOpts = {
     initialSlide: 0,
     slidesPerView: 1,
     centeredSlides: true,
-    allowTouchMove: false,
+    // allowTouchMove: false,
     speed: 200
   };
 
   framework: string;
+  preventBlur = true;
 
   public registerForms: FormGroup[] = [];
 
@@ -79,6 +82,9 @@ export class RegisterPage implements OnInit {
     }));
   }
 
+  ionViewDidEnter() {
+  }
+
   async register(form: NgForm) {
     await this.authService.register(form.value).then((res) => {
       this.navCtrl.navigateBack('/login');
@@ -100,7 +106,7 @@ export class RegisterPage implements OnInit {
       } else {
         return null;
       }
-    }
+    };
   }
 
   back() {
@@ -117,8 +123,27 @@ export class RegisterPage implements OnInit {
         this.showBackButton = true;
       }
     });
+  }
 
-    this.keyboard.show();
+  async slideForwardTwo() {
+
+    // await this.inputOne.ionBlur.subscribe(async (data) => {
+    //   console.log(data);
+    //   // 
+    // });
+    this.preventBlur = false;
+    this.inputTwo.setFocus();
+    this.slides.getActiveIndex().then((index) => {
+      if (index === this.fields.length - 2) {
+        this.slides.slideNext();
+        this.showButton = false;
+        this.preventBlur = true;
+      } else {
+        this.slides.slideNext();
+        this.showBackButton = true;
+        this.preventBlur = true;
+      }
+    });
   }
 
   slideBack() {
@@ -139,4 +164,15 @@ export class RegisterPage implements OnInit {
     this.dateTime.open();
   }
 
+  blurEvent(event) {
+    if (this.preventBlur) {
+      event.preventDefault();
+      event.target.setFocus();
+    }
+    console.log(event);
+  }
+
+  focusEvent(event) {
+    // console.log(event);
+  }
 }
