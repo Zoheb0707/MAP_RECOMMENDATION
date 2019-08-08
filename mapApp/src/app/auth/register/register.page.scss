@@ -41,6 +41,14 @@ ion-icon{
     color: green;
 }
 
+.option-buttons{
+    ion-button{
+        --background: green;
+        --background-activated: #2E8B57;
+    }
+}
+
+
 .prompt {
     padding-top:16px;
 }

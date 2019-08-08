@@ -30,12 +30,13 @@ export class AuthService {
               first: user.first_name,
               last: user.last_name
             },
+            dob: user.date_of_birth,
             city: 'Seattle, WA',
-            preferences: ['Pf1', 'Pf2', 'Pf3', 'Pf4', 'Pf5']
+            preferences: ['Pf1', 'Pf2', 'Pf3', 'Pf4', 'Pf5'],
+            visits: []
           });
 
-          const currentUser = this.fAuth.auth.currentUser;
-          currentUser.sendEmailVerification();
+          this.fAuth.auth.currentUser.sendEmailVerification();
           resolve(res);
         },
         err => reject(err));
@@ -50,7 +51,7 @@ export class AuthService {
         (res) => {
           if (res.user.emailVerified) {
             this.fStone.collection('users').doc(res.user.uid).valueChanges().subscribe((data: User) => {
-              resolve(res)
+              resolve(res);
             });
           } else {
             reject(res);
@@ -61,13 +62,11 @@ export class AuthService {
   }
 
   async logout() {
-    this.fAuth.auth.signOut().then(() => {
-      this.storage.remove('EXPIRES_IN');
-      this.storage.remove('ID');
-      this.storage.remove('FIRST_NAME');
-      this.storage.remove('LAST_NAME');
-    }).catch((error) => {
-      // An error happened.
+    this.fAuth.auth.signOut()
+    .then(() => {
+    })
+    .catch((error) => {
+      console.log(error);
     });
   }
 
