@@ -32,7 +32,7 @@ export class AuthService {
             },
             dob: user.date_of_birth,
             city: 'Seattle, WA',
-            preferences: ['Pf1', 'Pf2', 'Pf3', 'Pf4', 'Pf5'],
+            preferences: user.preferences,
             visits: []
           });
 

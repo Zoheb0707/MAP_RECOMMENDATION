@@ -17,89 +17,6 @@
 <ion-content>
   <form #form="ngForm" [formGroup]="registerForm" (ngSubmit)="register(form)">
     <ion-slides [options]="slideOpts">
-
-        <ion-slide>
-            <ion-grid>
-                <ion-row>
-                  <ion-col>
-                    <ion-item lines="none" class="ion-padding-vertical">
-                      <ion-text>Let us know your <b>preferences</b>.</ion-text>
-                    </ion-item>
-                  </ion-col>
-                </ion-row>
-
-                <ion-item>
-                  <ion-slides pager="true">
-                      <ion-slide>
-                          <!-- <ion-item> -->
-                            <ion-list>
-                              <ion-chip>Item</ion-chip>
-                              <ion-chip>Item</ion-chip>
-                              <ion-chip>Item</ion-chip>
-                              <ion-chip>Item</ion-chip>
-                              <ion-chip>Item</ion-chip>
-                            </ion-list>
-                          <!-- </ion-item>   -->
-                        </ion-slide>
-                        <ion-slide>
-                          <!-- <ion-item> -->
-                            <ion-list>
-                              <ion-chip>Item</ion-chip>
-                              <ion-chip>Item</ion-chip>
-                              <ion-chip>Item</ion-chip>
-                              <ion-chip>Item</ion-chip>
-                              <ion-chip>Item</ion-chip>
-                            </ion-list>
-                          <!-- </ion-item> -->
-                        </ion-slide>
-                  </ion-slides>
-                </ion-item>
-                <!-- <ion-row>
-                  <ion-slides pager="true" initialSlide="0" slidesPerView="1">
-                    <ion-slide>
-                      <ion-item>
-                        <ion-list>
-                          <ion-chip>Item</ion-chip>
-                          <ion-chip>Item</ion-chip>
-                          <ion-chip>Item</ion-chip>
-                          <ion-chip>Item</ion-chip>
-                          <ion-chip>Item</ion-chip>
-                        </ion-list>
-                      </ion-item>  
-                    </ion-slide>
-                    <ion-slide>
-                      <ion-item>
-                        <ion-list>
-                          <ion-chip>Item</ion-chip>
-                          <ion-chip>Item</ion-chip>
-                          <ion-chip>Item</ion-chip>
-                          <ion-chip>Item</ion-chip>
-                          <ion-chip>Item</ion-chip>
-                        </ion-list>
-                      </ion-item>
-                    </ion-slide>
-                  </ion-slides>
-                </ion-row>    -->
-                
-                
-                    <!-- <ion-slides pager="true">
-                      <ion-slide>
-                      <ion-slide *ngFor="let item of arrayOf(1)">
-                        <ion-list class="option">
-                              <ion-chip outline *ngFor="let item of getSubarray(item)" (click)="selectPreference(item)" [class.selected]="item.selected"> 
-                                <ion-avatar>
-                                  <img
-                                    src="https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y"
-                                  />
-                                </ion-avatar>                
-                                <ion-label>{{item.name}}</ion-label>
-                              </ion-chip>
-                            </ion-list>  
-                          </ion-slide>
-                    </ion-slides>   -->
-            </ion-grid>
-          </ion-slide>      
-
       <ion-slide>
         <ion-grid>
           <ion-row>
@@ -249,6 +166,33 @@
         </ion-grid>
       </ion-slide>
 
+      
+      <ion-slide>
+          <ion-grid>
+              <ion-row>
+                <ion-col>
+                  <ion-item lines="none" class="ion-padding-vertical">
+                    <ion-text>Let us know your <b>preferences</b>.</ion-text>
+                  </ion-item>
+                </ion-col>
+              </ion-row>
+              
+              
+                  <ion-slides pager="true">
+                    <ion-slide *ngFor="let item of arrayOf(1)">
+                      <ion-list class="option">
+                            <ion-chip outline *ngFor="let item of getSubarray(item)" (click)="selectPreference(item)" [class.selected]="item.selected"> 
+                              <ion-avatar>
+                                <img src="../assets/img/{{item.name.toLowerCase( )}}-flag-round-icon-256.png">
+                              </ion-avatar>                
+                              <ion-label>{{item.name}}</ion-label>
+                            </ion-chip>
+                          </ion-list>  
+                        </ion-slide>  
+                  </ion-slides> 
+          </ion-grid>
+        </ion-slide> 
+
     </ion-slides>
   </form>
 
@@ -286,6 +230,10 @@
         </ion-button>
 
         <ion-button expand="block" *ngIf="showButton[2]" (click)="slideForward()" class="ion-padding">
+          Next
+        </ion-button>
+
+        <ion-button expand="block" *ngIf="showButton[3]" (click)="slideForward()" class="ion-padding">
           Next
         </ion-button>
         

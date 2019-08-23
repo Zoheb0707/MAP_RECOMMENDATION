@@ -20,7 +20,7 @@ export class RegisterPage implements OnInit {
     initialSlide: 0,
     slidesPerView: 1,
     centeredSlides: true,
-    // allowTouchMove: false,
+    allowTouchMove: false,
     speed: 200
   };
 
@@ -32,9 +32,9 @@ export class RegisterPage implements OnInit {
                      {name: 'Korea', selected: false}, {name: 'Sweden', selected: false}, {name: 'Montenegro', selected: false},
                      {name: 'Australia', selected: false}, {name: 'USA', selected: false}];
 
-  private NUMBER_OF_SLIDES = 4;
+  private NUMBER_OF_SLIDES = 5;
 
-  showButton = [true, false, false];
+  showButton = [true, false, false, false];
   showBackButton = false;
   showSubmit = false;
 
@@ -62,7 +62,8 @@ export class RegisterPage implements OnInit {
       Validators.required,
       this.equalsTo('password')
     ])),
-    date_of_birth: new FormControl('')
+    date_of_birth: new FormControl(''),
+    preferences: new FormControl('')
   });
 
   user: User;
@@ -75,8 +76,13 @@ export class RegisterPage implements OnInit {
   ionViewDidEnter() {
   }
 
-  async register(form: NgForm) {
-    await this.authService.register(form.value).then(async (res) => {
+  async register() {
+    this.registerForm.controls.preferences.setValue(this.foodPreferences.filter((element) => {
+      return element.selected;
+    }).map((element) => {
+      return element.name;
+    }));
+    await this.authService.register(this.registerForm.value).then(async (res) => {
       this.navCtrl.navigateBack('/login');
     },
     (err) => {
@@ -183,5 +189,11 @@ export class RegisterPage implements OnInit {
     } else {
       element.selected = true;
     }
+  }
+
+  showSelected() {
+    console.log(this.foodPreferences.filter((element) => {
+      return element.selected;
+    }));
   }
 }
