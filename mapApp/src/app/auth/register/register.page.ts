@@ -5,8 +5,7 @@ import { FormBuilder, FormGroup, Validators, FormControl, NgForm, ValidatorFn, A
 import { User } from '../user';
 import { PickerOptions } from '@ionic/core';
 
-import { AngularFireAuth } from "angularfire2/auth";
-import { Keyboard } from '@ionic-native/keyboard/ngx';
+import { AngularFireAuth } from 'angularfire2/auth';
 
 @Component({
   selector: 'app-register',
@@ -21,12 +20,17 @@ export class RegisterPage implements OnInit {
     initialSlide: 0,
     slidesPerView: 1,
     centeredSlides: true,
-    allowTouchMove: false,
+    // allowTouchMove: false,
     speed: 200
   };
 
-  framework: string;
-  preventBlur = true;
+  foodPreferences = [{name: 'Vietnam', selected: false}, {name: 'Greece', selected: false}, {name: 'Italy', selected: false},
+                     {name: 'Pakistan', selected: false}, {name: 'Philippines', selected: false}, {name: 'Thailand', selected: false},
+                     {name: 'Japan', selected: false}, {name: 'Ukraine', selected: false}, {name: 'China', selected: false},
+                     {name: 'India', selected: false}, {name: 'Spain', selected: false}, {name: 'France', selected: false},
+                     {name: 'Mexico', selected: false}, {name: 'Switzerland', selected: false}, {name: 'Portugal', selected: false},
+                     {name: 'Korea', selected: false}, {name: 'Sweden', selected: false}, {name: 'Montenegro', selected: false},
+                     {name: 'Australia', selected: false}, {name: 'USA', selected: false}];
 
   private NUMBER_OF_SLIDES = 4;
 
@@ -64,7 +68,7 @@ export class RegisterPage implements OnInit {
   user: User;
 
   constructor(private authService: AuthService, private navCtrl: NavController, private formBuilder: FormBuilder,
-              private fAuth: AngularFireAuth, private pickerCtrl: PickerController, private keyboard: Keyboard) { }
+              private fAuth: AngularFireAuth, private pickerCtrl: PickerController) { }
 
   ngOnInit() {}
 
@@ -92,9 +96,9 @@ export class RegisterPage implements OnInit {
 
       const isValid = control.root.value[fieldName] === input;
       if (!isValid) {
-        return { equalTo: {isValid}};
+      return { equalTo: {isValid}};
       } else {
-        return null;
+      return null;
       }
     };
   }
@@ -160,15 +164,24 @@ export class RegisterPage implements OnInit {
     this.dateTime.open();
   }
 
-  blurEvent(event) {
-    if (this.preventBlur) {
-      event.preventDefault();
-      event.target.setFocus();
-    }
-    console.log(event);
+  arrayOf(n: number): any[] {
+    const arr = Array.apply(null, {length: n}).map(Number.call, Number);
+    return(arr);
   }
 
-  focusEvent(event) {
-    // console.log(event);
+  getSubarray(n: number): any[] {
+    const currentIndex = n * 5;
+    const toReturn = this.foodPreferences.slice(currentIndex, currentIndex + 5);
+    // console.log(currentIndex);
+    // console.log(toReturn);
+    return toReturn;
+  }
+
+  selectPreference(element) {
+    if (element.selected === true) {
+      element.selected = false;
+    } else {
+      element.selected = true;
+    }
   }
 }

@@ -11,16 +11,24 @@ ion-item{
     --margin-left: 10;
     --margin-right: 10;
     --background: #F5F4F0;
+    color: green;
 }
 
-ion-input{
-    --background: white;
-    --border-radius: 10px;
-}
+#rounded {
+        border: 2px solid green;
+        border-radius: 30px !important;
+        // padding-left: 30px !important;
+        font-size: 0.9em;
+        // margin-bottom: 10px;
+        background-color:#ffffff;
+        color: green;
+        // border-bottom: 0px !important;
+        // box-shadow: none !important;
+}   
 
 p {
     font-size: 0.8em;
-    color: #d2d2d2;
+    color: red;
 }
 
 ion-label, .select-text {
@@ -48,9 +56,27 @@ ion-icon{
     }
 }
 
-
 .prompt {
     padding-top:16px;
+}
+
+.option {
+    background-color: #F5F4F0;
+}
+
+ion-chip {
+    color: green;
+    border: 1px solid green;
+
+    &.selected {
+        background-color: green;
+        border: 1px solid white;
+        color: white;
+    }
+}
+
+ion-slides {
+    height: 100%;
 }
 
 // .item-input {
