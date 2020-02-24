@@ -6,8 +6,6 @@ import { AuthService } from '../auth/auth.service';
 
 import {AutoCompleteOptions} from 'ionic4-auto-complete';
 
-import {SimpleFunction} from '../services/simple-function.service';
-
 import * as firebase from 'firebase/app';
 
 @Component({
@@ -25,7 +23,7 @@ export class Tab2Page {
   public objects = ['RAM Restaurant & Brewery - University Village', 'CaliBurger',
                     'Taste of Xi\'an', 'Costa\'s'];
 
-  constructor(private  router: Router, private navCtrl: NavController, private auth: AuthService, public simpleFunction: SimpleFunction) {
+  constructor(private  router: Router, private navCtrl: NavController, private auth: AuthService) {
   }
 
   // onChangeAlert() {

@@ -1,118 +1,8 @@
-// ion-toolbar{
-//     --background: #F5F4F0;  
-// }
-
-// ion-content{
-//     --background: #F5F4F0;
-//     --keyboard-offset: 200px;
-//     // --color: #fff;
-// }
-
-// ion-item{
-//     --margin-left: 10;
-//     --margin-right: 10;
-//     --background: #F5F4F0;
-//     color: green;
-// }
-
-// #rounded {
-//         border: 2px solid green;
-//         border-radius: 30px !important;
-//         // padding-left: 30px !important;
-//         font-size: 0.9em;
-//         // margin-bottom: 10px;
-//         background-color:#ffffff;
-//         color: green;
-//         // border-bottom: 0px !important;
-//         // box-shadow: none !important;
-// }   
-
-// p {
-//     font-size: 0.8em;
-//     color: red;
-// }
-
-// ion-label, .select-text {
-//     margin-left: 10px;
-// }
-
-// .backButton {
-//     --background: green;
-//     --background-activated: #2E8B57;
-//     -text: white;
-// }
-
-// .cloned-input {
-//     margin-left: 0 !important;
-// }
-
-// ion-icon{
-//     color: green;
-// }
-
-// .option-buttons{
-//     ion-button{
-//         --background: green;
-//         --background-activated: #2E8B57;
-//     }
-// }
-
-// .prompt {
-//     padding-top:16px;
-// }
-
-// .option {
-//     background-color: #F5F4F0;
-// }
-
-ion-chip {
-    color: green;
-    border: 1px solid green;
-
-    &.selected {
-        background-color: green;
-        border: 1px solid white;
-        color: white;
-    }
-}
-
-// ion-slides {
-//     height: 100%;
-// }
-
-
-// #foo {
-//     height: 400px;
-// }
-
-// .child {
-//     ion-slide {
-//         width: 50%;
-//     }
-// }
-
-// // .item-input {
-// //     background-color: white;
-// //     border-color: darkgray;
-// //     border-width: 1px !important;
-// //     border-style: solid;
-// //     color: rgb(50, 50, 50);
-// //     padding: 0;
-// //     border-radius: 10px;
-// // }
-
-// // .invalid {
-// //     border: 1px solid #ea6153;
-// // }
+@import url('https://fonts.googleapis.com/css?family=Averia+Sans+Libre&display=swap');
 
 ion-button{
     --background: green;
 }
-
-// ion-content {
-//     height: 100vh;
-//     --overflow: hidden;
-// }
 
 ion-grid {
     --ion-grid-padding: 0;
@@ -133,19 +23,8 @@ ion-col {
 }
 
 #header {
-    height: 100%;
-    width: 35%;
-    position: fixed; 
-    z-index: 1;
-    top: 0; 
-    left: 0;
-    background-color: #a9a9a9;
-    overflow-x: hidden; 
-    padding: 0;
 
-    @media (max-width: 576px) {
-        height: 10%;
-    }
+    padding: 0 0;
 
     p {
         margin: 0;
@@ -154,6 +33,7 @@ ion-col {
         left: 50%;
         -ms-transform: translate(-50%, -50%);
         transform: translate(-50%, -50%);
+
         width: 100%;
 
         padding: 10px 10px;
@@ -169,39 +49,30 @@ ion-col {
 
         @media (max-width: 576px) {
             padding: 0 20px;
-            font-size: 28px;
+            // padding: 30vh 0;
         }
+    }
+
+    background-color: #a9a9a9;
+    height: 100%;
+
+    @media (max-width: 576px) {
+        height: 10vh;
     }
 }
 
 #form {
-    position: absolute;
-    left: 0; 
-    right: 0;
     padding: 0;
-    z-index: 0;
-
-    #form-area {
-        position: absolute;
-        width: 60%;
-    }
 
     @media (max-width: 576px) {
-        top: 10%;
-
-        #form-area {
-            width: 90%;
-            margin-left: auto; 
-            margin-right: auto; 
-        }
+        height: 90vh;
     }
 
     ion-card {
-        top: 20vh;
         width: 320px;
-        height: 260px;
+        height: 500px;
         margin: 0 auto;
-        padding: 0 50px;
+        padding: 10px 10px;
 
         background: #008000;
         mix-blend-mode: darken;
@@ -219,104 +90,6 @@ ion-col {
             position: absolute;
             height: 20px;
             left: 25px;
-        }
-
-        ion-item {
-
-            position: absolute;
-            width: 270px;
-            height: 40px;
-            left: 15px;
-
-            background: #FFFFFF;
-            border-radius: 15px;
-
-        }
-
-        @media (max-width: 1200px) {
-            top: 30vh;
-            width: 300px;
-        }
-    
-        @media (max-width: 1024px) {
-            top: 30vh;
-            width: 300px;
-        }
-    
-        @media (max-width: 900px) {
-            top: 30vh;
-            width: 300px;
-        }
-    
-        @media (max-width: 768px) {
-            top: 30vh;
-            width: 300px;
-        }
-    
-        @media (max-width: 576px) {
-            top: 20vh;
-            width: 300px;
-        }
-
-        .email {
-
-            ion-text {
-                width: 50px;
-                top: 26px;
-            }
-
-            ion-item {
-                top: 55px;
-            }
-
-        }
-
-        .password {
-
-            ion-text{
-                width: 85px;
-                top: 120px;
-            }
-
-            ion-item {
-                top: 150px;
-            }
-        }
-
-        .to-remember {
-            position: absolute;
-            width: 192px;
-            height: 30px;
-            left: 25px;
-            top: 215px;
-
-            ion-checkbox {
-                position: absolute;
-                width: 20px;
-                height: 20px;
-                left: 0px;
-                top: 5px;
-
-                --background-checked: #ffffff;
-                --checkmark-color: #008000;
-            }
-
-            ion-label {
-                position: absolute;
-                width: 149px;
-                height: 30px;
-                left: 43px;
-
-                font-family: Averia Sans Libre;
-                font-style: normal;
-                font-weight: normal;
-                font-size: 24px;
-                line-height: 30px;
-
-                /* identical to box height */
-
-                color: #FFFFFF;
-            }
         }
     }
 
@@ -377,4 +150,15 @@ ion-input {
 ion-content {
     margin: 10px;
     padding: 20px;
+}
+
+ion-chip {
+    color: green;
+    border: 1px solid green;
+
+    &.selected {
+        background-color: green;
+        border: 1px solid white;
+        color: white;
+    }
 }
