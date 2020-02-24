@@ -33,7 +33,11 @@
               </ion-item>
               <ion-item lines="none" id="rounded">
                 <!-- <ion-label position="floating">Enter email</ion-label> -->
-                <ion-input formControlName="email" type="email" [class.invalid]="!registerForm.controls.email.valid"></ion-input>
+                <ion-input
+                  formControlName="email"
+                  type="email"
+                  [class.invalid]="!registerForm.controls.email.valid"
+                ></ion-input>
               </ion-item>
 
               <ion-item lines="none">
@@ -53,7 +57,9 @@
           <ion-row>
             <ion-col>
               <ion-item lines="none" class="ion-padding-vertical">
-                <ion-text>My name is <b>Esi</b>. What is your <b>name</b>?</ion-text>
+                <ion-text
+                  >My name is <b>Esi</b>. What is your <b>name</b>?</ion-text
+                >
               </ion-item>
             </ion-col>
           </ion-row>
@@ -64,27 +70,39 @@
                 <ion-text>First Name</ion-text>
               </ion-item>
               <ion-item lines="none" id="rounded">
-                <ion-input formControlName="first_name" type="text" [class.invalid]="!registerForm.controls.first_name.valid"></ion-input>
+                <ion-input
+                  formControlName="first_name"
+                  type="text"
+                  [class.invalid]="!registerForm.controls.first_name.valid"
+                ></ion-input>
               </ion-item>
             </ion-col>
-          </ion-row>  
-          <ion-row>  
+          </ion-row>
+          <ion-row>
             <ion-col>
               <ion-item lines="none">
                 <ion-text>Last Name</ion-text>
               </ion-item>
               <ion-item lines="none" id="rounded">
-                <ion-input formControlName="last_name" type="text" [class.invalid]="!registerForm.controls.last_name.valid"></ion-input>
+                <ion-input
+                  formControlName="last_name"
+                  type="text"
+                  [class.invalid]="!registerForm.controls.last_name.valid"
+                ></ion-input>
               </ion-item>
             </ion-col>
           </ion-row>
 
           <ion-item lines="none">
             <ion-label>
-              <ion-row *ngIf="registerForm.get('first_name').hasError('pattern')">
-                <p>Please enter a valid first name.</p> 
+              <ion-row
+                *ngIf="registerForm.get('first_name').hasError('pattern')"
+              >
+                <p>Please enter a valid first name.</p>
               </ion-row>
-              <ion-row *ngIf="registerForm.get('last_name').hasError('pattern')">
+              <ion-row
+                *ngIf="registerForm.get('last_name').hasError('pattern')"
+              >
                 <p>Please enter a valid last name.</p>
               </ion-row>
             </ion-label>
@@ -94,14 +112,13 @@
 
       <ion-slide>
         <ion-grid>
-
           <ion-row>
             <ion-col>
               <ion-item lines="none" class="ion-padding-vertical">
-                My birthday is 8/5/2019. What is yours?
+                <ion-text>My birthday is 8/5/2019. What is yours?</ion-text>
               </ion-item>
             </ion-col>
-          </ion-row> 
+          </ion-row>
 
           <ion-row>
             <ion-col>
@@ -110,7 +127,10 @@
               </ion-item>
               <ion-item lines="none" id="rounded">
                 <!-- <ion-datetime formControlName="date_of_birth" displayFormat="MMMM DD YYYY" readonly=true></ion-datetime> -->
-                <ion-datetime formControlName="date_of_birth" displayFormat="MMMM DD YYYY"></ion-datetime>
+                <ion-datetime
+                  formControlName="date_of_birth"
+                  displayFormat="MMMM DD YYYY"
+                ></ion-datetime>
               </ion-item>
             </ion-col>
           </ion-row>
@@ -119,14 +139,13 @@
 
       <ion-slide>
         <ion-grid>
-
           <ion-row>
             <ion-col>
               <ion-item lines="none" class="ion-padding-vertical">
-                Now let's set up a password.
+                <ion-text>Now let's set up a password.</ion-text>
               </ion-item>
             </ion-col>
-          </ion-row> 
+          </ion-row>
 
           <ion-row>
             <ion-col>
@@ -134,7 +153,11 @@
                 <ion-text>Password</ion-text>
               </ion-item>
               <ion-item lines="none" id="rounded">
-                <ion-input formControlName="password" type="password" [class.invalid]="!registerForm.controls.password.valid"></ion-input>
+                <ion-input
+                  formControlName="password"
+                  type="password"
+                  [class.invalid]="!registerForm.controls.password.valid"
+                ></ion-input>
               </ion-item>
             </ion-col>
           </ion-row>
@@ -143,56 +166,68 @@
             <ion-col>
               <ion-item lines="none">
                 <ion-text>Password again</ion-text>
-              </ion-item>     
+              </ion-item>
               <ion-item lines="none" id="rounded">
-                <ion-input formControlName="confirm" type="password" [class.invalid]="!registerForm.controls.confirm.valid"></ion-input>
+                <ion-input
+                  formControlName="confirm"
+                  type="password"
+                  [class.invalid]="!registerForm.controls.confirm.valid"
+                ></ion-input>
               </ion-item>
             </ion-col>
-          </ion-row>  
+          </ion-row>
 
-            <ion-item lines="none">
-              <ion-label>
-                <ion-row>
-                  <ion-col *ngIf="registerForm.get('password').hasError('pattern')">
-                    <p text-wrap>Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters.</p> 
-                  </ion-col>
-                </ion-row>
-                <ion-row *ngIf="registerForm.get('confirm').hasError('equalTo')">
-                  <p>Password Mismatch.</p>
-                </ion-row>
-              </ion-label>
-            </ion-item>
-
+          <ion-item lines="none">
+            <ion-label>
+              <ion-row>
+                <ion-col
+                  *ngIf="registerForm.get('password').hasError('pattern')"
+                >
+                  <p text-wrap>
+                    Must contain at least one number and one uppercase and
+                    lowercase letter, and at least 8 or more characters.
+                  </p>
+                </ion-col>
+              </ion-row>
+              <ion-row *ngIf="registerForm.get('confirm').hasError('equalTo')">
+                <p>Password Mismatch.</p>
+              </ion-row>
+            </ion-label>
+          </ion-item>
         </ion-grid>
       </ion-slide>
 
-      
       <ion-slide>
-          <ion-grid>
-              <ion-row>
-                <ion-col>
-                  <ion-item lines="none" class="ion-padding-vertical">
-                    <ion-text>Let us know your <b>preferences</b>.</ion-text>
-                  </ion-item>
-                </ion-col>
-              </ion-row>
-              
-              
-                  <ion-slides pager="true">
-                    <ion-slide *ngFor="let item of arrayOf(1)">
-                      <ion-list class="option">
-                            <ion-chip outline *ngFor="let item of getSubarray(item)" (click)="selectPreference(item)" [class.selected]="item.selected"> 
-                              <ion-avatar>
-                                <img src="../assets/img/{{item.name.toLowerCase( )}}-flag-round-icon-256.png">
-                              </ion-avatar>                
-                              <ion-label>{{item.name}}</ion-label>
-                            </ion-chip>
-                          </ion-list>  
-                        </ion-slide>  
-                  </ion-slides> 
-          </ion-grid>
-        </ion-slide> 
+        <ion-grid>
+          <ion-row>
+            <ion-col>
+              <ion-item lines="none" class="ion-padding-vertical">
+                <ion-text>Let us know your <b>preferences</b>.</ion-text>
+              </ion-item>
+            </ion-col>
+          </ion-row>
 
+          <ion-slides pager="true">
+            <ion-slide *ngFor="let item of arrayOf(1)">
+              <ion-list class="option">
+                <ion-chip
+                  outline
+                  *ngFor="let item of getSubarray(item)"
+                  (click)="selectPreference(item)"
+                  [class.selected]="item.selected"
+                >
+                  <ion-avatar>
+                    <img
+                      src="../assets/img/{{item.name.toLowerCase( )}}-flag-round-icon-256.png"
+                    />
+                  </ion-avatar>
+                  <ion-label>{{item.name}}</ion-label>
+                </ion-chip>
+              </ion-list>
+            </ion-slide>
+          </ion-slides>
+        </ion-grid>
+      </ion-slide>
     </ion-slides>
   </form>
 
@@ -221,24 +256,53 @@
 
 <ion-footer no-border>
   <ion-toolbar transparent class="option-buttons">
-        <ion-button expand="block" [disabled]="registerForm.get('email').invalid" *ngIf="showButton[0]" (click)="slideForwardwithEmailCheck(registerForm.get('email'))" class="ion-padding">
-          Next
-        </ion-button>
+    <ion-button
+      expand="block"
+      [disabled]="registerForm.get('email').invalid"
+      *ngIf="showButton[0]"
+      (click)="slideForwardwithEmailCheck(registerForm.get('email'))"
+      class="ion-padding"
+    >
+      Next
+    </ion-button>
 
-        <ion-button expand="block" [disabled]="registerForm.get('first_name').invalid || registerForm.get('last_name').invalid" *ngIf="showButton[1]" (click)="slideForward()" class="ion-padding">
-          Next
-        </ion-button>
+    <ion-button
+      expand="block"
+      [disabled]="registerForm.get('first_name').invalid || registerForm.get('last_name').invalid"
+      *ngIf="showButton[1]"
+      (click)="slideForward()"
+      class="ion-padding"
+    >
+      Next
+    </ion-button>
 
-        <ion-button expand="block" *ngIf="showButton[2]" (click)="slideForward()" class="ion-padding">
-          Next
-        </ion-button>
+    <ion-button
+      expand="block"
+      *ngIf="showButton[2]"
+      (click)="slideForward()"
+      class="ion-padding"
+    >
+      Next
+    </ion-button>
 
-        <ion-button expand="block" *ngIf="showButton[3]" (click)="slideForward()" class="ion-padding">
-          Next
-        </ion-button>
-        
-        <ion-button [disabled]="form.invalid" expand="block" *ngIf="showSubmit" (click)="register(form)" class="ion-padding" color="danger">
-          Submit
-        </ion-button>
+    <ion-button
+      expand="block"
+      *ngIf="showButton[3]"
+      (click)="slideForward()"
+      class="ion-padding"
+    >
+      Next
+    </ion-button>
+
+    <ion-button
+      [disabled]="form.invalid"
+      expand="block"
+      *ngIf="showSubmit"
+      (click)="register(form)"
+      class="ion-padding"
+      color="danger"
+    >
+      Submit
+    </ion-button>
   </ion-toolbar>
 </ion-footer>
