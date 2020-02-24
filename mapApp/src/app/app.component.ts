@@ -1,18 +1,18 @@
-import { Component } from '@angular/core';
+import { Component } from "@angular/core";
 
-import { Platform, NavController } from '@ionic/angular';
-import { SplashScreen } from '@ionic-native/splash-screen/ngx';
-import { StatusBar } from '@ionic-native/status-bar/ngx';
+import { Platform, NavController } from "@ionic/angular";
+import { SplashScreen } from "@ionic-native/splash-screen/ngx";
+import { StatusBar } from "@ionic-native/status-bar/ngx";
 
-import { AngularFireAuth } from 'angularfire2/auth';
-import { AuthUser } from './providers/auth-user';
+import { AngularFireAuth } from "angularfire2/auth";
+import { AuthUser } from "./providers/auth-user";
 
-import { Router } from '@angular/router';
-
+import { Router } from "@angular/router";
+import { Storage } from "@ionic/storage";
 
 @Component({
-  selector: 'app-root',
-  templateUrl: 'app.component.html'
+  selector: "app-root",
+  templateUrl: "app.component.html"
 })
 export class AppComponent {
   constructor(
@@ -22,7 +22,8 @@ export class AppComponent {
     public fAuth: AngularFireAuth,
     public navCtrl: NavController,
     public authUser: AuthUser,
-    public router: Router
+    public router: Router,
+    private storage: Storage
   ) {
     this.initializeApp();
   }
@@ -31,14 +32,15 @@ export class AppComponent {
     this.platform.ready().then(() => {
       this.statusBar.styleDefault();
       this.splashScreen.hide();
-      this.fAuth.authState.subscribe( (user) => {
+
+      this.fAuth.authState.subscribe(user => {
         if (user) {
-          this.navCtrl.navigateRoot('/app/tabs/search');
+          this.navCtrl.navigateRoot("/app/tabs/search");
           this.authUser.setUser(user.uid).then(() => {
-            console.log('Logged In');
+            console.log("Logged In");
           });
         } else {
-          console.log('Not Logged In');
+          console.log("Not Logged In");
         }
       });
     });

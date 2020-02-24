@@ -1,15 +1,226 @@
-ion-item{
-    --background: #3880ff;
-    --color: #fff;
-}
+@import url('https://fonts.googleapis.com/css?family=Averia+Sans+Libre&display=swap');
+
 ion-button{
-    --background: #062f77;
+    --background: green;
 }
 
-a{
-    color: #fff;
+// ion-content {
+//     height: 100vh;
+//     --overflow: hidden;
+// }
+
+ion-grid {
+    --ion-grid-padding: 0;
+    // --ion-grid-width: 100%;
+    height: 100%;
+    width: 100%;
 }
 
-ion-content {
-    --overflow: hidden;
+ion-row {
+    height: 100%;
+
+    @media (max-width: 576px) {
+        height: 30%;
+    }
 }
+
+ion-col {
+    --ion-grid-column-padding: 0;
+}
+
+#header {
+
+    padding: 0 0;
+
+    p {
+        margin: 0;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        -ms-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
+
+        width: 100%;
+
+        padding: 10px 10px;
+
+        font-family: Averia Sans Libre;
+        font-style: normal;
+        font-weight: normal;
+        text-align: center;
+
+        font-size: 36px;
+
+        color: #008000;
+
+        @media (max-width: 576px) {
+            padding: 0 20px;
+            // padding: 30vh 0;
+        }
+    }
+
+    background-color: #a9a9a9;
+    height: 100%;
+
+    @media (max-width: 576px) {
+        // background-color: blue;
+        height: 10vh;
+    }
+}
+
+#form {
+    padding: 0;
+
+    ion-card {
+        width: 320px;
+        height: 260px;
+        margin: 0 auto;
+        padding: 10px 10px;
+
+        background: #008000;
+        mix-blend-mode: darken;
+        border-radius: 15px;
+
+        ion-text{
+            font-family: Averia Sans Libre;
+            font-style: normal;
+            font-weight: normal;
+            font-size: 18px;
+            line-height: 22px;
+
+            color: #FFFFFF;
+
+            position: absolute;
+            height: 20px;
+            left: 25px;
+        }
+
+        ion-item {
+
+            position: absolute;
+            width: 270px;
+            height: 40px;
+            left: 15px;
+
+            background: #FFFFFF;
+            border-radius: 15px;
+
+        }
+
+        ion-input {
+            font-family: Averia Sans Libre;
+
+            // input {
+            //     margin: auto 0;
+            // }
+        }
+
+        .email {
+
+            ion-text {
+                width: 50px;
+                top: 26px;
+            }
+
+            ion-item {
+                top: 55px;
+            }
+
+        }
+
+        .password {
+
+            ion-text{
+                width: 85px;
+                top: 120px;
+            }
+
+            ion-item {
+                top: 150px;
+            }
+        }
+
+        .to-remember {
+            position: absolute;
+            width: 192px;
+            height: 30px;
+            left: 25px;
+            top: 215px;
+
+            ion-checkbox {
+                position: absolute;
+                width: 20px;
+                height: 20px;
+                left: 0px;
+                top: 5px;
+
+                --background-checked: #ffffff;
+                --checkmark-color: #008000;
+            }
+
+            ion-label {
+                position: absolute;
+                width: 149px;
+                height: 30px;
+                left: 43px;
+
+                font-family: Averia Sans Libre;
+                font-style: normal;
+                font-weight: normal;
+                font-size: 24px;
+                line-height: 30px;
+
+                /* identical to box height */
+
+                color: #FFFFFF;
+            }
+        }
+    }
+
+    height: 100%;
+
+    @media (max-width: 576px) {
+        height: 90vh;
+    }
+}
+
+#buttons {
+    width: 350px;
+    height: auto;
+    padding: 10px 10px 0 10px;
+
+    ion-col {
+        padding: 10px 10px;
+    }
+
+    ion-button {
+        width: 100%;
+        height: 100%;
+        --background: #F5F4F0; 
+        color: #008000;
+
+        --background-activated: #F5F4F0;
+        --color-activated: #ffffff;
+
+        font-family: Averia Sans Libre;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 15px;
+        line-height: 30px;
+    }
+}
+
+#test {
+    position: absolute;
+    top: 55%;
+    left: 50%;
+    -ms-transform: translate(-50%, -55%);
+    transform: translate(-50%, -55%);
+
+    @media (max-width: 576px) {
+        top: 45%;
+        -ms-transform: translate(-50%, -45%);
+        transform: translate(-50%, -45%);
+    }
+}
+

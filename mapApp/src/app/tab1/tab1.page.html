@@ -23,20 +23,42 @@
   </ion-refresher>
 
   <ion-list>
-    <ion-card *ngFor="let restaurant of pastVisitsTwo" [routerLink]="['/', 'restaurant', restaurant.pid]">
-      <ion-card-header>
-        <ion-card-title>{{ restaurant.name }}</ion-card-title>
-      </ion-card-header>
+    <ion-item-sliding #slidingItem *ngFor="let restaurant of pastVisitsTwo" lines="none">
 
-      <ion-card-content>
-        You visited this place on {{ restaurant.date.seconds * 1000 | date: 'dd/MM/yyyy' }}.
-      </ion-card-content>
-    </ion-card>
+      <ion-item-options side="start">
+        <ion-item-option color="tertiary" expandable (click)=edit($event)>
+          Edit
+        </ion-item-option>
+      </ion-item-options>
+
+      <ion-item lines="none">
+        <!-- <ion-card [routerLink]="['/', 'restaurant', restaurant.pid]"> -->
+        <ion-card>
+          <ion-card-header>
+              <ion-card-title>{{ restaurant.name }}</ion-card-title>
+            </ion-card-header>
+    
+            <rating *ngIf="restaurant.rating" [rate]="restaurant.rating"
+              readonly="true"
+              size="default">
+            </rating>
+
+            <ion-button *ngIf="!restaurant.rating" size="large">
+              Add Rating
+            </ion-button>
+    
+            <ion-card-content>
+              You visited this place on {{ restaurant.date.seconds * 1000 | date: 'dd/MM/yyyy' }}.
+            </ion-card-content>
+          </ion-card>
+      </ion-item>
+
+      <ion-item-options side="end">
+        <ion-item-option color="danger" expandable (click)="deleteVisit(slidingItem, restaurant)">
+          Delete
+        </ion-item-option>
+      </ion-item-options>
+
+    </ion-item-sliding>    
   </ion-list>
-
-  <div *ngIf="debug">
-    <ion-button color="danger" (click)="showRestaurants()"
-      >Add Random Place</ion-button
-    >
-  </div>
 </ion-content>

@@ -3,4 +3,5 @@ export interface Visit {
     name: string;
     pid: string;
     date: firebase.firestore.Timestamp;
+    rating: number;
 }

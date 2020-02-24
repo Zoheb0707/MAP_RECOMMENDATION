@@ -5,8 +5,11 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Tab2Page } from './tab2.page';
 
+import { AutoCompleteModule } from 'ionic4-auto-complete';
+
 @NgModule({
   imports: [
+    AutoCompleteModule,
     IonicModule,
     CommonModule,
     FormsModule,

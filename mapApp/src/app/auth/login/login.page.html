@@ -1,42 +1,65 @@
-<ion-content color="primary" padding>
-    <form #form="ngForm" (ngSubmit)= 'login(form)'>
-      <ion-grid>
-        <ion-row color="primary" justify-content-center>
-          <ion-col align-self-center size-md="6" size-lg="5" size-xs="12">
-            <div text-center>
-              <h3>Login</h3>
-            </div>
-            <div padding>
+<ion-grid>
+  <ion-row>
+    <ion-col size-xs="12" size-sm="4">
+      <div id="header">
+        <p>
+          Ezi Travel
+        </p>
+      </div>
+    </ion-col>
+    <ion-col size-xs="12" size-sm="8">
+      <div id="form">
+        <form #form="ngForm" [formGroup]="loginForm" (ngSubmit)="login(form)">
+          <div id="test">
+          <ion-card>
+            <div class="email">
+              <ion-text>
+                Email
+              </ion-text>
               <ion-item>
-                <ion-input name="email" type="email" placeholder="your@email.com" ngModel required></ion-input>
+                <ion-input formControlName="email" type="email" placeholder="your@email.com"></ion-input>
               </ion-item>
+            </div>
+            <div class="password">
+              <ion-text>
+                Password
+              </ion-text>
               <ion-item>
-                <ion-input name="password" type="password" placeholder="Password" ngModel required></ion-input>
+                <ion-input item-end formControlName="password" [type]="passwordType" placeholder="Password"></ion-input>
+                <ion-icon [name]="passwordIcon" class="passwordIcon" (click)='hideShowPassword()'></ion-icon>
               </ion-item>
             </div>
-            <div>
-              <ion-item lines="none">
-                <ion-label>Remember Me</ion-label>
-                <ion-checkbox color="primary" checked slot="start"></ion-checkbox>
-              </ion-item>
+            <div class="to-remember">
+              <ion-label>Remember Me</ion-label>
+              <ion-checkbox formControlName="isRemembered" slot="start"></ion-checkbox>
             </div>
-            <div padding>
-              <ion-button size="large" type="submit" [disabled]="form.invalid" expand="block">Login</ion-button>
-            </div>
-          </ion-col>
-        </ion-row>
-
-        <ion-row>
-            <div text-center>
-          If you don't have an account, please <a routerLink='/register'>
-            register</a> first!
-            </div>
-        </ion-row>
-        
-      </ion-grid>
-    </form>
-
-  </ion-content>
-
-  
-  
+          </ion-card>
+          <div id="buttons">
+            <ion-grid>
+              <ion-row>
+                <ion-col size="5">
+                  <ion-button class="create-user" (click)="this.navCtrl.navigateRoot('register')">
+                    Create User
+                  </ion-button>
+                </ion-col>
+                <ion-col size="7">
+                  <ion-button class="forgot-password">
+                    Forgot Password
+                  </ion-button>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col>
+                  <ion-button [disabled]="form.invalid" (click)="login(form)" class="login-button">
+                    Login
+                  </ion-button>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </div>
+          </div>
+        </form>
+      </div>
+    </ion-col>
+  </ion-row>
+</ion-grid>

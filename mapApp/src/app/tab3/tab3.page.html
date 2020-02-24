@@ -18,7 +18,7 @@
             <img src="https://www.scripturaengage.com/wp-content/uploads/2017/03/Profile-Picture-Joke-Dehond-Circle.png">
           </ion-avatar> -->
           <ion-img
-            src="https://www.scripturaengage.com/wp-content/uploads/2017/03/Profile-Picture-Joke-Dehond-Circle.png"
+            src="assets/img/user.png"
           ></ion-img>
         </div>
       </ion-col>
@@ -43,17 +43,15 @@
 
     <ion-row>
       <ion-col col-6 offset-3 text-center>
-        <ion-slides pager=true>
+        <ion-slides>
           <ion-slide *ngFor="let item of arrayOf(numberOfSlides)">
-            <ion-list>
-              <ion-chip *ngFor="let item of getSubarray(item)"> 
-                <ion-avatar>
-                  <img
-                    src="https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y"
-                  />
-                </ion-avatar>                
-                <ion-label>{{item}}</ion-label>
-              </ion-chip>
+            <ion-list class="option">
+              <ion-chip outline *ngFor="let item of this.user.preferences"> 
+                  <ion-avatar>
+                    <img src="../assets/img/{{item.toLowerCase( )}}-flag-round-icon-256.png">
+                  </ion-avatar>                
+                  <ion-label>{{item}}</ion-label>
+                </ion-chip>
             </ion-list>  
           </ion-slide>
         </ion-slides>

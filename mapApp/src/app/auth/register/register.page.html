@@ -1,3 +1,82 @@
+<ion-content>
+<ion-grid>
+  <ion-row>
+    <ion-col size-xs="12" size-sm="4" id="header">
+      <div>
+      <!-- <div id="header"> -->
+        <p>
+          Create An Account
+        </p>
+      </div>
+    </ion-col>
+    <ion-col size-xs="12" size-sm="8" id="form">
+        <div id="form-area">
+        <!-- <div id="form"> -->
+          <form #form="ngForm" [formGroup]="registerForm" (ngSubmit)="register(form)">
+          <section padding="150px 50px 50px 50px">
+            <h2>Personal Info</h2>
+            <ion-label position="stacked">First Name</ion-label>
+            <ion-input formControlName="first_name" type="text" [class.invalid]="!registerForm.controls.first_name.valid"></ion-input>
+            <div *ngIf="registerForm.get('first_name').hasError('pattern')">
+              <p>❌ Please enter a valid first name.</p>
+            </div>
+            <ion-label position="stacked">Last Name</ion-label>
+            <ion-input formControlName="last_name" type="text" [class.invalid]="!registerForm.controls.last_name.valid"></ion-input>
+            <div *ngIf="registerForm.get('last_name').hasError('pattern')">
+              <p>❌ Please enter a valid last name.</p>
+            </div>
+            <ion-label position="stacked">E-mail</ion-label>
+            <ion-input formControlName="email" type="email" [class.invalid]="!registerForm.controls.email.valid"></ion-input>
+            <div *ngIf="registerForm.get('email').hasError('email')">
+              <p>❌ Please enter a valid e-mail.</p>
+            </div>
+          </section>
+
+          <section padding="50px">
+            <h2>Security</h2>
+            <ion-label position="stacked">Password</ion-label>
+            <ion-input formControlName="password" type="password" [class.invalid]="!registerForm.controls.password.valid"></ion-input>
+            <div *ngIf="registerForm.get('password').hasError('pattern')">
+              <p>❌ Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters.</p>
+            </div>
+            <ion-label position="stacked">Confirmation</ion-label>
+            <ion-input formControlName="confirm" type="password" [class.invalid]="!registerForm.controls.confirm.valid"></ion-input>
+            <div *ngIf="registerForm.get('confirm').hasError('equalTo')">
+              <p>❌ Password Mismatch</p>
+            </div>
+          </section>
+
+          <section padding="50px">
+            <h2>Preferences</h2>
+            <ion-slides>
+                <ion-slide *ngFor="let item of arrayOf(3)">
+                  <ion-list class="option">
+                    <ion-chip outline *ngFor="let item of this.foodPreferences" (click)="selectPreference(item)" [class.selected]="item.selected"> 
+                        <ion-avatar>
+                          <img src="../assets/img/{{item.name.toLowerCase()}}-flag-round-icon-256.png">
+                        </ion-avatar>                
+                        <ion-label>{{item.name}}</ion-label>
+                      </ion-chip>
+                  </ion-list>  
+                </ion-slide>
+            </ion-slides>
+          </section>
+        
+          <ion-footer no-border paddind="10px">
+              <ion-toolbar transparent class="option-buttons">
+                    <ion-button expand="block" (click)="register(form)"color="danger">
+                      Submit
+                    </ion-button>
+              </ion-toolbar>
+          </ion-footer>
+          </form>
+      </div>
+    </ion-col>
+  </ion-row>
+</ion-grid>
+</ion-content>
+  
+<!-- 
 <ion-header no-border>
   <ion-toolbar>
     <ion-title>Create account</ion-title>
@@ -32,7 +111,7 @@
                 <ion-text>Email</ion-text>
               </ion-item>
               <ion-item lines="none" id="rounded">
-                <!-- <ion-label position="floating">Enter email</ion-label> -->
+                <!-- <ion-label position="floating">Enter email</ion-label> 
                 <ion-input formControlName="email" type="email" [class.invalid]="!registerForm.controls.email.valid"></ion-input>
               </ion-item>
 
@@ -109,7 +188,7 @@
                 <ion-text>Date of Birth</ion-text>
               </ion-item>
               <ion-item lines="none" id="rounded">
-                <!-- <ion-datetime formControlName="date_of_birth" displayFormat="MMMM DD YYYY" readonly=true></ion-datetime> -->
+                <!-- <ion-datetime formControlName="date_of_birth" displayFormat="MMMM DD YYYY" readonly=true></ion-datetime> 
                 <ion-datetime formControlName="date_of_birth" displayFormat="MMMM DD YYYY"></ion-datetime>
               </ion-item>
             </ion-col>
@@ -196,7 +275,7 @@
     </ion-slides>
   </form>
 
-  <!-- <ion-grid class="option-buttons">
+  <ion-grid class="option-buttons">
     <ion-row>
       <ion-col>
         <ion-button expand="block" [disabled]="registerForm.get('email').invalid" *ngIf="showButton[0]" (click)="slideForwardwithEmailCheck(registerForm.get('email'))" class="ion-padding">
@@ -216,7 +295,7 @@
         </ion-button>
       </ion-col>
     </ion-row>
-  </ion-grid> -->
+  </ion-grid> 
 </ion-content>
 
 <ion-footer no-border>
@@ -241,4 +320,4 @@
           Submit
         </ion-button>
   </ion-toolbar>
-</ion-footer>
+</ion-footer> -->

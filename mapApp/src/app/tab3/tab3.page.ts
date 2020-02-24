@@ -61,7 +61,7 @@ export class Tab3Page implements OnInit {
 
   async onChangeExit() {
     await this.authService.logout();
-    this.navCtrl.navigateBack('login');
+    this.navCtrl.navigateRoot('login');
   }
 
 

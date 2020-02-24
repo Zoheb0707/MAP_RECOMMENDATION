@@ -8,6 +8,8 @@ import { Restaurant } from './restaurant';
 
 import { AuthUser } from '../providers/auth-user';
 import { Visit } from '../providers/visit-interface';
+import { VisitObject } from '../providers/visit-object';
+import { ToastController } from '@ionic/angular';
 
 
 @Component({
@@ -28,10 +30,14 @@ export class Tab1Page implements OnInit {
   debug = false;
   // sorting option
   sortingOption = 'date';
+  // availiable places
+  places = ['RAM Restaurant & Brewery - University Village', 'CaliBurger', "Taste of Xi'an", "Costa's", 'Hawaii BBQ', 'Red Pepper', 'Oasis Tea Zone', 'Little Kitchen', 'Sureshot Cafe', 'Starbucks', 'By George', 'Chipotle', 'Aladdin Gyro-cery & Deli', 'Saigon Deli', 'Pho Shizzle Too!', "Finn MacCool's", 'China First', 'Bulldog News', 'Rancho Bravo Tacos', 'Samurai Noodle', 'Best of Bento', 'Pho Than Brothers', 'Flowers', 'The Block', 'Ichiro', 'Pho Tran', 'Starbucks', 'University Kitchen', 'Subway', "Henry's Taiwan Kitchen", "Guanaco's Tacos & Pupuseria", 'Green House', 'Thai65', "Jimmy John's", 'Cafe Solstice', 'ReBoot', 'Starbucks', 'The Northlake Tavern & Pizza House', "Voula's Offshore Cafe", 'Zoka Coffee - University', 'The Ugly Mug', 'Parnassus', 'Cafe Allegro', "Cedar's", 'Sizzle & Crunch', 'Pho Thy Thy', 'Yummy Bites', "Chili's South Indian Cousine", 'Thanh Vi', 'Slate Coffee Roasters', 'Beetle Cafe', 'Shawarma King', 'Mee Sum Pastry', 'Texians BBQ', 'Chi Mac', 'Palmi Korean BBQ', 'Starbucks', 'SomTamThai', "Jake's Coffee", 'Mei Mei Cafe', 'Nasai Teriyaki', '50 North', 'Great State Burger - Laurelhurst', 'Eureka!', 'Juice Press', 'Teavana', "Delfino's Pizza", 'Starbucks', 'Jamba Juice', 'General Porpoise Doughnuts - Laurelhurst', "Kai's Bistro & Lounge", "Samir's Mediterranean Grill", "Sarducci's Specialty Subs", 'Bambu', 'U:Don', 'Tea Republik', 'Ding Tea', 'Kung Fu Tea', 'City Grind at the Henry', 'Starbucks', 'Din Tai Fung', 'Ba Bar', "Domino's", 'Subway', 'Big Tuna', 'Qdoba', 'Cultivate', 'MOD Pizza', 'RedBean Coffee', 'Zen Noodle', 'Husky Grind', 'Subway', 'Chipotle', 'Einstein Bros. Bagels', 'Evergreens', 'Qdoba', 'Elemental Pizza - U-Village', 'Kong Tofu House', 'Sharetea', "Hiroshi's Poke", 'Kiki Bakery & Cafe', 'Hokkaido Ramen Santouka', 'Starbucks', 'Korean Tofu House', 'Jewel of India', "Yinzi's Kitchen", 'Morsel', 'Poke Lover', 'Which Wich?', 'Hunan Chinese Kitchen', 'Wann Yen', 'Royal Gaming Cafe', 'Kitanda', 'CharLaLa', 'Ma’ono Fried Chicken', 'Supreme', 'Poindexter', 'Genghis Cohen', 'Little Duck', 'Microsoft Café', 'Byrek & Bagguette', 'Pagliacci Pizza', 'Donut Factory', 'Pagliacci Pizza', 'Pagliacci Pizza', 'Jack in the Box']
+  rate = 4;
 
   constructor(private router: Router, private http: HttpClient, private visitsService: VisitsService, private storage: Storage,
               private loadingController: LoadingController, private alertController: AlertController,
-              private actionSheetController: ActionSheetController, private events: Events, private userAuth: AuthUser) { }
+              private actionSheetController: ActionSheetController, private events: Events, private userAuth: AuthUser,
+              private toastController: ToastController) { }
 
   ngOnInit() {
     this.reloadVisits();
@@ -120,10 +126,10 @@ export class Tab1Page implements OnInit {
       //   break;
       // }
 
-      // case 'rating': {
-      //   await visitsArray.sort((r1, r2) => +r1.avg_rating > +r2.avg_rating ? -1 : +r1.avg_rating < +r2.avg_rating ? 1 : 0);
-      //   break;
-      // }
+      case 'rating': {
+        await visitsArray.sort((r1, r2) => !r2.rating || r1.rating > r2.rating ? -1 : !r1.rating || r1.rating < r2.rating ? 1 : 0);
+        break;
+      }
     }
   }
 
@@ -154,13 +160,13 @@ export class Tab1Page implements OnInit {
           this.sortVisits(this.sortingOption, this.pastVisitsTwo);
         }
       },
-      // {
-      //   text: 'Rating',
-      //   handler: () => {
-      //     this.sortingOption = 'rating';
-      //     this.sortVisits(this.sortingOption);
-      //   }
-      // },
+      {
+        text: 'Rating',
+        handler: () => {
+          this.sortingOption = 'rating';
+          this.sortVisits(this.sortingOption, this.pastVisitsTwo);
+        }
+      },
       {
         text: 'Back',
         role: 'destructive',
@@ -174,8 +180,9 @@ export class Tab1Page implements OnInit {
   // Adds a new visit
   async addVisit() {
     this.presentNameForNewPlace().then(async (res) => {
-      if (res.data.name !== undefined) {
-        await this.userAuth.addVisit(res.data.name).then(async () => {
+      // console.log(res);
+      if (res[0].data.name !== undefined) {
+        await this.userAuth.addVisit(res[0].data.name, res[1]).then(async () => {
           const updatedVisits = this.userAuth.getUser().visits;
           // Sort results
           await this.sortVisits(this.sortingOption, updatedVisits);
@@ -189,15 +196,22 @@ export class Tab1Page implements OnInit {
   // Presents a pop-up window with question to type a name of the place
   async presentNameForNewPlace() {
     let choice: any;
+    let stars = NaN;
     const alert = await this.alertController.create({
       header: 'What is the name of the place?',
       inputs: [
         {
           name: 'name',
-          placeholder: 'Name'
+          type: 'search',
+          placeholder: 'Name',
         }
       ],
       buttons: [
+        { text: '1', handler: data => { stars = 1; return false; }},
+        { text: '2', handler: data => { stars = 2; return false; }},
+        { text: '3', handler: data => { stars = 3; return false; }},
+        { text: '4', handler: data => { stars = 4; return false; }},
+        { text: '5', handler: data => { stars = 5; return false; }},
         {
           text: 'Cancel',
           role: 'cancel',
@@ -220,6 +234,26 @@ export class Tab1Page implements OnInit {
       choice = data;
     });
 
-    return choice;
+    return [choice, stars];
+  }
+
+  async deleteVisit(event: any, visit: VisitObject) {
+    event.close();
+    await this.userAuth.removeVisit(visit);
+    const updatedVisits = this.userAuth.getUser().visits;
+    // Sort results
+    await this.sortVisits(this.sortingOption, updatedVisits);
+    // Store them
+    this.pastVisitsTwo = updatedVisits;
+    this.presentRemovalNotification();
+  }
+
+  async presentRemovalNotification() {
+    const toast = await this.toastController.create({
+      showCloseButton: true,
+      message: 'Your visit have been deleted.',
+      duration: 2000
+    });
+    toast.present();
   }
 }

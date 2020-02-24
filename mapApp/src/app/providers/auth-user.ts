@@ -111,7 +111,7 @@ export class AuthUser {
     }
 
     // Adds a new visit to the db
-    async addVisit(placeId: string) {
+    async addVisit(placeId: string, givenRating: number) {
         const date = new Date();
         const visitName = this.user.uid + '_' + placeId + '_' + date.getTime();
 
@@ -119,7 +119,8 @@ export class AuthUser {
             uid: this.user.uid,
             date: firebase.firestore.Timestamp.fromDate(date),
             pid: placeId,
-            name: placeId
+            name: placeId,
+            rating: givenRating
         })
         .then(async () => {
             const visitReference: firebase.firestore.DocumentReference = await firebase.firestore().collection('visits').doc(visitName);
@@ -140,5 +141,23 @@ export class AuthUser {
         .catch((error) => {
             console.log(error);
         });
+    }
+
+    async removeVisit(visit: VisitObject) {
+        this.user.visits = await this.user.visits.filter( (element) => {
+            return element.id !== visit.id;
+        });
+        // const visitReference: firebase.firestore.DocumentReference = await firebase.firestore().collection('visits').doc(visit.id);
+        // console.log(visit.id, visitReference);
+
+        // try {
+        //     firebase.firestore().collection('users').doc().update({
+        //         visits: firebase.firestore.FieldValue.arrayRemove(visitReference)
+        //     });
+        // } catch (err) {
+        //     console.log(err);
+        // }
+
+        // await firebase.firestore().collection('visits').doc(visit.id).delete();
     }
 }
